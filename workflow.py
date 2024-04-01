@@ -4,7 +4,7 @@ from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
 
 @workflow
-def training_workflow(data_path: FlyteFile) -> FlyteFile: 
+def training_workflow(data_path: str) -> FlyteFile: 
     """
     Sample data preparation and training workflow
 
@@ -25,7 +25,7 @@ def training_workflow(data_path: FlyteFile) -> FlyteFile:
         hardware_tier="Small",
         command="python /mnt/code/scripts/prep-data.py",
         inputs=[
-            Input(name="data_path", type=FlyteFile, value=data_path)
+            Input(name="data_path", type=str, value=data_path)
         ],
         outputs=[
             Output(name="processed_data", type=FlyteFile)
