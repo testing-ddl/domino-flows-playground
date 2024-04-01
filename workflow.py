@@ -4,7 +4,7 @@ from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
 
 @workflow
-def training_workflow(data_path: FlyteFile="/mnt/code/data/data.csv") -> FlyteFile: 
+def training_workflow(data_path: FlyteFile) -> FlyteFile: 
     """
     Sample data preparation and training workflow
 
@@ -13,7 +13,7 @@ def training_workflow(data_path: FlyteFile="/mnt/code/data/data.csv") -> FlyteFi
 
     To run this workflowp, execute the following line in the terminal
 
-    pyflyte run --remote workflow.py training_workflow
+    pyflyte run --remote workflow.py training_workflow --data_path /mnt/code/data/data.csv
 
     :param data_path: Path of the CSV file data
     :return: The training results as a model
