@@ -14,4 +14,26 @@ If you want to change the input data, replace the `data_path` parameter with the
 
 # Flow Definition
 
+The sample flow contains two tasks - one for data preparation and one for model training. This section explains each of the steps in detail:
+
+** Data preparation **
+
+The code snippet below shows the definition for the data preparation task
+
+```
+data_prep_results = run_domino_job(
+    name="Prepare data",
+    environment="Data Prep Environment",
+    hardware_tier="Small",
+    command="python /mnt/code/scripts/prep-data.py",
+    inputs=[
+        Input(name="data_path", type=str, value=data_path)
+    ],
+    outputs=[
+        Output(name="processed_data", type=FlyteFile)
+    ]
+)
+```
+
+
 # Flow Scripts

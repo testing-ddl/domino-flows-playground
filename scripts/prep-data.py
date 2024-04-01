@@ -2,7 +2,8 @@ import pandas as pd
 import argparse
 
 def read_input(input_name):
-    with open(input_name, "r") as file:
+    input_location = f"/workflow/inputs/{input_name}"
+    with open(input_location, "r") as file:
         contents = file.read()
         return contents
 
