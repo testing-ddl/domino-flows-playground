@@ -21,9 +21,9 @@ def training_workflow(data_path: str) -> FlyteFile:
 
     data_prep_results = run_domino_job(
         name="Prepare data",
+        command="python /mnt/code/scripts/prep-data.py",
         environment="Data Prep Environment",
         hardware_tier="Small",
-        command="python /mnt/code/scripts/prep-data.py",
         inputs=[
             Input(name="data_path", type=str, value=data_path)
         ],
@@ -34,9 +34,9 @@ def training_workflow(data_path: str) -> FlyteFile:
 
     training_results = run_domino_job(
         name="Train model",
+        command="python /mnt/code/scripts/train-model.py",
         environment="Training Environment",
         hardware_tier="Medium",
-        command="python /mnt/code/scripts/train-model.py",
         inputs=[
             Input(name="processed_data", type=FlyteFile, value=data_prep_results['processed_data']),
             Input(name="epochs", type=int, value=10),
