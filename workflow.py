@@ -1,4 +1,4 @@
-from utils.flyte import run_domino_job, Input, Output
+from utils.flyte import DominoTask, Input, Output
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
@@ -19,7 +19,7 @@ def training_workflow(data_path: str) -> FlyteFile:
     :return: The training results as a model
     """
 
-    data_prep_results = run_domino_job(
+    data_prep_results = DominoTask(
         name="Prepare data",
         command="python /mnt/code/scripts/prep-data.py",
         environment="Data Prep Environment",
@@ -32,7 +32,7 @@ def training_workflow(data_path: str) -> FlyteFile:
         ]
     )
 
-    training_results = run_domino_job(
+    training_results = DominoTask(
         name="Train model",
         command="python /mnt/code/scripts/train-model.py",
         environment="Training Environment",
