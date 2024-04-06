@@ -11,7 +11,7 @@
       "uri": "https://github.com/ddl-jwu/domino-ai-flows",
       "ref": {
         "type": "commitId",
-        "value": "8a45ea053ec1ff8012161054b110059ff2d51dd4"
+        "value": "ef0f88be983ea63dd0989ee89677f0eb465a6a4a"
       },
       "serviceProvider": "github"
     },
@@ -25,8 +25,8 @@
       "link": "https://github.com/ddl-jwu/domino-ai-flows?tab=Apache-2.0-1-ov-file"
     },
     "data": {
-      "name": "This template uses a mock data which is included with the repository in the data folder",
-      "link": "https://github.com/ddl-jwu/domino-sce-flows/tree/main/data"
+      "name": "This template uses mock data which is included with the repository in the data folder",
+      "link": "https://github.com/ddl-jwu/domino-ai-flows/tree/main/data"
     },
     "dataFormat": "CSV",
     "recommended": false,

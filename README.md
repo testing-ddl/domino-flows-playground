@@ -10,9 +10,13 @@ To run the flow, execute the following command in a workspace:
 pyflyte run --remote workflow.py training_workflow --data_path /mnt/code/data/data.csv
 ```
 
-Once the command is executed, a link to monitor the run will be displayed in the terminal.
+Once you run the command, a direct link to the Flyte console should be returned:
 
-If you want to change the input data, replace the `data_path` parameter with the location to your input data. This can point to a location in your dataset snapshots.
+![Execution Link](./screenshots/execution-link.png)
+
+Upon clicking on the link, you should be navigated to a page where you can monitor the execution:
+
+![Monitor](./screenshots/monitor.png)
 
 # Flow Definition
 
