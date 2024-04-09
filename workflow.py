@@ -48,3 +48,21 @@ def training_workflow(data_path: str) -> FlyteFile:
     )
 
     return training_results['model']
+
+# pyflyte run --remote workflow.py generate_types 
+@workflow
+def generate_types(): 
+
+    data_prep_results = DominoTask(
+        name="Generate SCE Types",
+        command="python /mnt/code/scripts/generate-sce-types.py",
+        environment="Domino Standard Environment Py3.9 R4.3",
+        hardware_tier="Small",
+        outputs=[
+            Output(name="pdf", type=FlyteFile),
+            Output(name="sas7bdat", type=FlyteFile)
+        ]
+    )
+
+    return 
+
