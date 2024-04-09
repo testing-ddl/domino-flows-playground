@@ -1,4 +1,4 @@
-
+import shutil
 
 # PDF Files
 named_output = "pdf"
