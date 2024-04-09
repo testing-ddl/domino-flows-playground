@@ -2,6 +2,7 @@ from utils.flyte import DominoTask, Input, Output
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
+import pandas as pd
 
 @workflow
 def training_workflow(data_path: str) -> FlyteFile: 
@@ -53,14 +54,32 @@ def training_workflow(data_path: str) -> FlyteFile:
 @workflow
 def generate_types(): 
 
-    data_prep_results = DominoTask(
+    sce_types = DominoTask(
         name="Generate SCE Types",
         command="python /mnt/code/scripts/generate-sce-types.py",
         environment="Domino Standard Environment Py3.9 R4.3",
         hardware_tier="Small",
+        inputs=[
+            Input(name="sdtm_data_path", type=str, value="/some/path/to/data")
+        ],
         outputs=[
             Output(name="pdf", type=FlyteFile),
             Output(name="sas7bdat", type=FlyteFile)
+        ]
+    )
+
+    ml_types = DominoTask(
+        name="Generate ML Types",
+        command="python /mnt/code/scripts/generate-ml-types.py",
+        environment="Domino Standard Environment Py3.9 R4.3",
+        hardware_tier="Small",
+        inputs=[
+            Input(name="batch_size", type=int, value=32),
+            Input(name="learning_rate", type=float, value=0.001),
+        ],
+        outputs=[
+            Output(name="csv", type=FlyteFile),
+            Output(name="mlflow_model", type=FlyteDirectory)
         ]
     )
 
