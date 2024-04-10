@@ -76,9 +76,14 @@ def generate_types():
         inputs=[
             Input(name="batch_size", type=int, value=32),
             Input(name="learning_rate", type=float, value=0.001),
+            Input(name="do_eval", type=bool, value=True),
         ],
         outputs=[
             Output(name="csv", type=FlyteFile),
+            Output(name="json", type=FlyteFile),
+            Output(name="png", type=FlyteFile),
+            Output(name="jpeg", type=FlyteFile),
+            Output(name="notebook", type=FlyteFile),
             Output(name="mlflow_model", type=FlyteDirectory)
         ]
     )
