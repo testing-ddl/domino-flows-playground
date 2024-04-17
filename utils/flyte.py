@@ -59,7 +59,7 @@ def DominoTask(
         ApiKey=api_key,
         Command=command,
         CommitId=dfs_commit_id, 
-        MainRepoGitRef=GitRef(Type="head"), # TODO: Allow user to change git branch and commit. For now, we will use
+        MainRepoGitRef=GitRef(Type="head"), # TODO: Allow user to pick specific branch & commit
         EnvironmentId=environmentId,
         EnvironmentRevisionSpec=None, # TODO: Allow user to specify revision ID. For now, it just takes the active revision.
         HardwareTierId=hardwareTierId,
