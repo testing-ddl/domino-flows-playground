@@ -201,3 +201,24 @@ def training_workflow_nested(data_path: str):
     )
 
     return 
+
+
+# pyflyte run --remote workflow.py training_workflow_mlflow
+@workflow
+def training_workflow_mlflow():
+    """
+    Sample mlflow training workflow
+
+    To run this workflow, execute the following line in the terminal
+
+    pyflyte run --remote workflow.py training_workflow_mlflow
+    """
+
+    data_prep_results = DominoTask(
+        name="Run experiment",
+        command="python /mnt/code/scripts/experiment.py",
+        environment="Training Environment",
+        hardware_tier="Medium",
+    )
+
+    return
