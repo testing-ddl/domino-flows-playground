@@ -114,15 +114,11 @@ def generate_types():
             Input(name="list", type=List[int], value=[1,2,3,4,5]),
             Input(
                 name="dict", 
-                type=Dict, 
+                type=Dict[str,int], 
                 value={
-                    'param1': 10, 
-                    "param2": {
-                        "a": 4,
-                        "b": {
-                            "x": True
-                        }
-                    }
+                    'param1': 1, 
+                    "param2": 2,
+                    "param3": 3
                 })
         ],
         outputs=[
