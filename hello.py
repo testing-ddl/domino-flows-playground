@@ -17,12 +17,12 @@ def hello_workflow(a: int, b: int) -> float:
         MainRepoGitRef=GitRef(Type="head"),
         Command="python add.py"
     )
-    add_job_config.resolve_job_properties()
     add_job = DominoJobTask(
         'Add numbers',
         add_job_config,
         inputs={'first_value': int, 'second_value': int},
-        outputs={'sum': int}
+        outputs={'sum': int},
+        use_latest=True
     )
     sum = add_job(first_value=a, second_value=b)
 
@@ -33,12 +33,12 @@ def hello_workflow(a: int, b: int) -> float:
         MainRepoGitRef=GitRef(Type="head"),
         Command="python sqrt.py"
     )
-    sqrt_job_config.resolve_job_properties()
     sqrt_job = DominoJobTask(
         'Square root',
         sqrt_job_config,
         inputs={'value': int},
-        outputs={'sqrt': float}
+        outputs={'sqrt': float},
+        use_latest=True
     )
     sqrt = sqrt_job(value=sum)
     return sqrt

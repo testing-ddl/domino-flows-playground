@@ -4,7 +4,7 @@ def read_input(input_name):
         return file.read()
 
 def write_output(output_name, content):
-    output_location = f"/workflow/inputs{output_name}"
+    output_location = f"/workflow/inputs/{output_name}"
     with open(output_location, 'w') as file:
         file.write(content)
 
