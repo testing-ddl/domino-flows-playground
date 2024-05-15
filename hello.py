@@ -1,7 +1,7 @@
 
 import os
 from flytekit import workflow
-from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
+from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 
 @workflow
 def hello_workflow(a: int, b: int) -> float:

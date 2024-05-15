@@ -9,4 +9,4 @@ sum = int(a) + int(b)
 print(f"The sum of {a} + {b} is {sum}")
 
 # Write output
-Path("/workflow/inputs/sum").write_text(str(sum))
+Path("/workflow/outputs/sum").write_text(str(sum))
