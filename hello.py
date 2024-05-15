@@ -1,25 +1,15 @@
+
 import os
-from typing import List
 from flytekit import workflow
-from flytekit.types.file import FlyteFile
-from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef, EnvironmentRevisionSpecification, EnvironmentRevisionType, DatasetSnapshot
-from flytekit.loggers import logger
-from dataclasses import dataclass
-from domino import Domino
+from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 
 @workflow
 def hello_workflow(a: int, b: int) -> float:
 
     # Create first task 
-    add_job_config = DominoJobConfig(
-        ApiKey=os.environ.get('DOMINO_USER_API_KEY'),
-        Title='Add numbers',
-        MainRepoGitRef=GitRef(Type="head"),
-        Command="python add.py"
-    )
     add_job = DominoJobTask(
-        'Add numbers',
-        add_job_config,
+        name='Add numbers',
+        domino_job_config=DominoJobConfig(ApiKey=os.environ.get('DOMINO_USER_API_KEY'), MainRepoGitRef=GitRef(Type="head"),Command="python add.py"),
         inputs={'first_value': int, 'second_value': int},
         outputs={'sum': int},
         use_latest=True
@@ -27,18 +17,17 @@ def hello_workflow(a: int, b: int) -> float:
     sum = add_job(first_value=a, second_value=b)
 
     # Create second task 
-    sqrt_job_config = DominoJobConfig(
-        ApiKey=os.environ.get('DOMINO_USER_API_KEY'),
-        Title='Square root',
-        MainRepoGitRef=GitRef(Type="head"),
-        Command="python sqrt.py"
-    )
     sqrt_job = DominoJobTask(
-        'Square root',
-        sqrt_job_config,
+        name='Square root',
+        domino_job_config=DominoJobConfig(
+            ApiKey=os.environ.get('DOMINO_USER_API_KEY'),
+            MainRepoGitRef=GitRef(Type="head"),
+            Command="python sqrt.py"
+        ),
         inputs={'value': int},
         outputs={'sqrt': float},
         use_latest=True
     )
     sqrt = sqrt_job(value=sum)
+    
     return sqrt
