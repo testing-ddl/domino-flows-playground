@@ -1,13 +1,9 @@
 
 import os
 from flytekit import workflow
-from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
-
+from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 
 # pyflyte run --remote simple_math_workflow.py simple_math_workflow --a 10 --b 6
-
-from flytekit import workflow
-from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 
 @workflow
 def simple_math_workflow(a: int, b: int) -> float:
