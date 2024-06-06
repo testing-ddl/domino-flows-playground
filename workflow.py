@@ -90,7 +90,7 @@ def generate_types():
         environment="Domino Standard Environment Py3.9 R4.3",
         hardware_tier="Small",
         inputs={'sdtm_data_path': str},
-        outputs={'flows.pdf':FlyteFile[TypeVar("pdf"), 'flows.sas7bdat': FlyteFile[TypeVar("sas7bdat")}
+        outputs={'flows.pdf':FlyteFile[TypeVar("pdf")], 'flows.sas7bdat': FlyteFile[TypeVar("sas7bdat")]}
         #     Input(name="sdtm_data_path": str, type=str, value="/some/path/to/data")
         # ],            Output(name="pdf", type=FlyteFile[TypeVar("pdf")]),
         #     Output(name="sas7bdat", type=FlyteFile[TypeVar("sas7bdat")])
@@ -112,11 +112,11 @@ def generate_types():
             'dict': Dict[str,int]
         },
         outputs={
-            'csv': FlyteFile[TypeVar("csv"),
-            'json': FlyteFile[TypeVar("json"),
-            'png': FlyteFile[TypeVar("csv"),
-            'jpeg': FlyteFile[TypeVar("jpeg"),
-            'notebook': FlyteFile[TypeVar("ipynb"),
+            'csv': FlyteFile[TypeVar("csv")],
+            'json': FlyteFile[TypeVar("json")],
+            'png': FlyteFile[TypeVar("csv")],
+            'jpeg': FlyteFile[TypeVar("jpeg")],
+            'notebook': FlyteFile[TypeVar("ipynb")],
             'mlflow_model': FlyteDirectory
         }
         #     Input(name="batch_size", type=int, value=32),
