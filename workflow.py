@@ -2,6 +2,7 @@ from utils.flyte import DominoTask, Input, Output
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
+from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 from typing import TypeVar, Optional, List, Dict
 import pandas as pd
 
