@@ -53,7 +53,8 @@ def training_subworkflow(data_path: str) -> FlyteFile:
 
     data_prep_results = DominoJobTask(
         name="Prepare data",
-        domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),Command="python /mnt/code/scripts/prep-data.py"),
+        domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
+                                          Command="python /mnt/code/scripts/prep-data.py"),
         # environment="Data Prep Environment",
         # hardware_tier="Small",
         inputs={'data_path': str},
@@ -66,7 +67,7 @@ def training_subworkflow(data_path: str) -> FlyteFile:
     training_results = DominoJobTask(
         name="Train model",
         domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
-                                          Command="python/mnt/code/scripts/train-model.py"),
+                                          Command="python /mnt/code/scripts/train-model.py"),
         # environment="Training Environment",
         # hardware_tier="Medium",
         inputs={'processed_data': FlyteFile, 'epochs': int, 'batch_size': int},
@@ -144,7 +145,8 @@ def training_workflow_git(data_path: str) -> FlyteFile:
 
     data_prep_results = DominoJobTask(
         name="Prepare data ",
-        domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),Command="python /mnt/code/scripts/prep-data.py"),
+        domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
+                                          Command="python /mnt/code/scripts/prep-data.py"),
         inputs={'data_path': str},
         outputs={'processed_data': FlyteFile},
         use_latest=True
@@ -173,7 +175,8 @@ def training_workflow_nested(data_path: str):
 
     results = DominoJobTask(
         name="Final task",
-        domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),Command="sleep 100"),
+        domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
+                                          Command="sleep 100"),
         # environment="Training Environment",
         # hardware_tier="Medium",
         inputs={'model': FlyteFile},
