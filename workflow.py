@@ -38,7 +38,7 @@ def training_workflow(data_path: str) -> FlyteFile:
     training_results = DominoJobTask(
         name="Train model",
         domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
-                                          Command="python/mnt/code/scripts/train-model.py"),
+                                          Command="python /mnt/code/scripts/train-model.py"),
         # environment="Training Environment",
         # hardware_tier="Medium",
         inputs={'processed_data': FlyteFile, 'epochs': int, 'batch_size': int},
