@@ -34,7 +34,7 @@ def generate_types():
         outputs={
             'csv': FlyteFile[TypeVar("csv")],
             'json': FlyteFile[TypeVar("json")],
-            'png': FlyteFile[TypeVar("csv")],
+            'png': FlyteFile[TypeVar("png")],
             'jpeg': FlyteFile[TypeVar("jpeg")],
             'notebook': FlyteFile[TypeVar("ipynb")],
             'mlflow_model': FlyteDirectory
