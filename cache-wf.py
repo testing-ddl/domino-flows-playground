@@ -14,7 +14,7 @@ def training_workflow(data_path: str) -> final_outputs:
     This workflow accepts a path to a CSV for some initial input and simulates
     the processing of the data and usage of the processed data in a training job.
     To run this workflowp, execute the following line in the terminal
-    pyflyte run --remote workflow.py training_workflow --data_path /mnt/code/artifacts/data.csv
+    pyflyte run --remote cache-wf.py training_workflow --data_path /mnt/code/artifacts/data.csv
     :param data_path: Path of the CSV file data
     :return: The training results as a model
     """
@@ -22,7 +22,7 @@ def training_workflow(data_path: str) -> final_outputs:
     data_prep_results = run_domino_job_task(
         flyte_task_name="Prepare data",
         command="python /mnt/code/scripts/prep-data.py",
-        environment_name="Domino Standard Environment Py3.11 R4.4",
+        environment_name="Domino Standard Environment Py3.10 R4.4",
         hardware_tier_name="Small",
         inputs=[
             Input(name="data_path", type=str, value=data_path)
@@ -36,7 +36,7 @@ def training_workflow(data_path: str) -> final_outputs:
     training_results = run_domino_job_task(
         flyte_task_name="Train model",
         command="python /mnt/code/scripts/train-model.py",
-        environment_name="Domino Standard Environment Py3.11 R4.4",
+        environment_name="Domino Standard Environment Py3.10 R4.4",
         hardware_tier_name="Small",
         inputs=[
             Input(name="processed_data", type=FlyteFile[TypeVar("csv")], value=data_prep_results['processed_data']),
@@ -58,7 +58,7 @@ def training_workflow_cache(data_path: str) -> final_outputs:
     This workflow accepts a path to a CSV for some initial input and simulates
     the processing of the data and usage of the processed data in a training job.
     To run this workflowp, execute the following line in the terminal
-    pyflyte run --remote workflow.py training_workflow --data_path /mnt/code/artifacts/data.csv
+    pyflyte run --remote cache-wf.py training_workflow --data_path /mnt/code/artifacts/data.csv
     :param data_path: Path of the CSV file data
     :return: The training results as a model
     """
