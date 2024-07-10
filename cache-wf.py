@@ -14,7 +14,7 @@ def training_workflow(data_path: str) -> final_outputs:
     This workflow accepts a path to a CSV for some initial input and simulates
     the processing of the data and usage of the processed data in a training job.
     To run this workflowp, execute the following line in the terminal
-    pyflyte run --remote workflow.py training_workflow --data_path /mnt/code/data/data.csv
+    pyflyte run --remote workflow.py training_workflow --data_path /mnt/code/artifacts/data.csv
     :param data_path: Path of the CSV file data
     :return: The training results as a model
     """
@@ -58,7 +58,7 @@ def training_workflow_cache(data_path: str) -> final_outputs:
     This workflow accepts a path to a CSV for some initial input and simulates
     the processing of the data and usage of the processed data in a training job.
     To run this workflowp, execute the following line in the terminal
-    pyflyte run --remote workflow.py training_workflow --data_path /mnt/code/data/data.csv
+    pyflyte run --remote workflow.py training_workflow --data_path /mnt/code/artifacts/data.csv
     :param data_path: Path of the CSV file data
     :return: The training results as a model
     """
