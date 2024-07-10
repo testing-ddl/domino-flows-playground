@@ -74,7 +74,10 @@ def training_workflow_cache(data_path: str) -> final_outputs:
         domino_job_config=data_prep_job_config,
         inputs={'data_path': str},
         outputs={'processed_data': FlyteFile[TypeVar("csv")]},
-        use_latest=True,
+        environment_name="Domino Core Environment",
+        # environment_name="Domino Standard Environment Py3.10 R4.4",
+        hardware_tier_name="Small",
+        # use_latest=True,
         cache=True,
         cache_version="1.0"
     )
@@ -89,7 +92,10 @@ def training_workflow_cache(data_path: str) -> final_outputs:
         domino_job_config=training_job_config,
         inputs={'processed_data': FlyteFile[TypeVar("csv")]},
         outputs={'model': FlyteFile},
-        use_latest=True,
+        environment_name="Domino Core Environment",
+        # environment_name="Domino Standard Environment Py3.10 R4.4",
+        hardware_tier_name="Small",
+        # use_latest=True,
         cache=True,
         cache_version="1.0"
     )
