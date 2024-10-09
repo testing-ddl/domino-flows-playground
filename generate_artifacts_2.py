@@ -3,16 +3,22 @@ from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 from flytekitplugins.domino.artifact import Artifact, DATA, MODEL, REPORT
-from typing import TypeVar, Optional, List, Dict
+from typing import TypeVar, Optional, List, Dict, NamedTuple
 import pandas as pd
 
 ReportArtifact = Artifact(name="My Report", type=REPORT)
 DataArtifact = Artifact(name="My Data", type=DATA)
 
+final_outputs = NamedTuple(
+    "final_outputs",
+    csv=DataArtifact.File(name="data.csv"),
+    notebook=DataArtifact.File(name="notebook.ipynb"),
+    report=ReportArtifact.File(name="generated.pdf")
+)
+
 # pyflyte run --remote generate_artifacts_2.py generate_artifacts 
 @workflow
-def generate_artifacts() -> DataArtifact.File(name="data.csv"): 
-
+def generate_artifacts() -> final_outputs: 
     sce_types = DominoJobTask(
         name="Generate SCE Types",
         domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
@@ -22,7 +28,7 @@ def generate_artifacts() -> DataArtifact.File(name="data.csv"):
         use_latest=True
     )
 
-    sce_types(sdtm_data_path="/mnt/code/artifacts")
+    sce_returns = sce_types(sdtm_data_path="/mnt/code/artifacts")
 
     ml_types = DominoJobTask(
         name="Generate ML Types",
@@ -40,7 +46,7 @@ def generate_artifacts() -> DataArtifact.File(name="data.csv"):
             'json': DataArtifact.File(name="data.json"),
             'png': ReportArtifact.File(name="report.png"),
             'jpeg': ReportArtifact.File(name="report.jpeg"),
-            'notebook': DataArtifact.File(name="notebook.ipynb"),
+            'notebook': FlyteFile[TypeVar("ipynb")],
             'mlflow_model': FlyteDirectory
         },
         use_latest=True
@@ -55,4 +61,4 @@ def generate_artifacts() -> DataArtifact.File(name="data.csv"):
             )
 
     # TODO: why is this ml_returns[0] and not ml_returns["csv"] ? Something looks broken
-    return ml_returns[0]
+    return final_outputs(csv=ml_returns[0], notebook=ml_returns[4], report=sce_returns[0])
