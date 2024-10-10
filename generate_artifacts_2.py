@@ -60,5 +60,4 @@ def generate_artifacts() -> final_outputs:
             dict={"param1": 1, "param2": 2,"param3": 3}
             )
 
-    # TODO: why is this ml_returns[0] and not ml_returns["csv"] ? Something looks broken
-    return final_outputs(csv=ml_returns[0], notebook=ml_returns[4], report=sce_returns[0])
+    return final_outputs(csv=ml_returns.csv, notebook=ml_returns.notebook, report=sce_returns.pdf)
