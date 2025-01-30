@@ -32,6 +32,8 @@ def training_workflow(data_path: str) -> final_outputs:
             Output(name="processed_data", type=FlyteFile[TypeVar("csv")])
         ],
         use_project_defaults_for_omitted=True,
+        cache=True,
+        cache_version="1.0"
     )
 
     training_results = run_domino_job_task(
@@ -48,7 +50,9 @@ def training_workflow(data_path: str) -> final_outputs:
         output_specs=[
             Output(name="model", type=FlyteFile)
         ],
-        use_project_defaults_for_omitted=True
+        use_project_defaults_for_omitted=True,
+        cache=True,
+        cache_version="1.0"
     )
 
     return final_outputs(model=training_results['model'])
