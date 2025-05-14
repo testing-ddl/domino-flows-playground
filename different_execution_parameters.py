@@ -13,7 +13,7 @@ def simple_math_workflow(a: int, b: int) -> float:
     add_task = run_domino_job_task(
         flyte_task_name="Add numbers",
         command="python add.py",
-        environment_name="Domino Standard Environment Py3.10 R4.4",
+        environment_name="Domino Standard Environment Py3.10 R4.5",
         hardware_tier_name="Small",
         inputs=[
             Input(name="first_value", type=int, value=a),
