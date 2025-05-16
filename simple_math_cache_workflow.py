@@ -16,7 +16,6 @@ def simple_math_workflow(a: int, b: int) -> float:
         main_git_repo_ref=GitRef(Type="commitId", Value="9fc19c5d95e4a21a5b677ce4ac7896d301d831b9"),
         environment_name="Domino Core Environment",
         hardware_tier_name="Small",
-        # domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),Command="python add.py"),
         inputs=[
             Input(name="first_value", type=int, value=a),
             Input(name="second_value", type=int, value=b)
@@ -24,26 +23,17 @@ def simple_math_workflow(a: int, b: int) -> float:
         output_specs=[
             Output(name="sum", type=int)
         ],
-        # inputs={'first_value': int, 'second_value': int},
-        # outputs={'sum': int},
         cache=True,
         cache_version="1.0",
+        external_data_volumes=[],
+        dataset_snapshots=[],
+        volume_size_gib=10,
 
-        # flyte_task_name="Prepare data",
-        # command="python /mnt/code/scripts/prep-data.py",
-        # main_git_repo_ref=GitRef(Type="commitId", Value="9fc19c5d95e4a21a5b677ce4ac7896d301d831b9"),
-        # environment_name="Domino Core Environment",
-        # hardware_tier_name="Small",
-        # inputs=[
-        #     Input(name="data_path", type=str, value=data_path)
-        # ],
-        # output_specs=[
-        #     Output(name="processed_data", type=FlyteFile[TypeVar("csv")])
-        # ],
+        # Minumum usage of use defaults
         use_project_defaults_for_omitted=True,
-        
+        # dfs_repo_commit_id="",
+        # environment_revision_id=""
     )
-    # sum = add_task(first_value=a, second_value=b)
 
     # Create second task 
     sqrt = sqrt_task = run_domino_job_task(
@@ -52,19 +42,22 @@ def simple_math_workflow(a: int, b: int) -> float:
         main_git_repo_ref=GitRef(Type="commitId", Value="9fc19c5d95e4a21a5b677ce4ac7896d301d831b9"),
         environment_name="Domino Core Environment",
         hardware_tier_name="Small",
-        # domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),Command="python sqrt.py"),
         inputs=[
             Input(name="value", type=int, value=sum)
         ],
         output_specs=[
             Output(name="sqrt", type=float)
         ],
-        # inputs={'value': int},
-        # outputs={'sqrt': float},
-        use_project_defaults_for_omitted=True,
         cache=True,
-        cache_version="1.0"
+        cache_version="1.0",
+        external_data_volumes=[],
+        dataset_snapshots=[],
+        volume_size_gib=10,
+        
+        # Minumum usage of use defaults
+        use_project_defaults_for_omitted=True,
+        # dfs_repo_commit_id="",
+        # environment_revision_id=""
     )
-    # sqrt = sqrt_task(value=sum)
 
     return sqrt
