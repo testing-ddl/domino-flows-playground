@@ -55,3 +55,29 @@ def generate_artifacts():
             )
 
     return 
+
+
+@workflow
+def generate_artifacts_with_dataset_exports(): 
+
+    sce_types = DominoJobTask(
+        name="Generate SCE Types",
+        domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
+                                          Command="python /mnt/code/scripts/generate-sce-types.py"),
+        inputs={'sdtm_data_path': str},
+        outputs={'pdf': ReportArtifact.File(name="generated.pdf"), 'sas7bdat': DataArtifact.File(name="data.sas7bdat")},
+        use_latest=True
+    )
+
+    sce_types(sdtm_data_path="/mnt/code/artifacts")
+
+    from flytekitplugins.domino.artifact import run_launch_export_artifacts_task, ExportArtifactToDatasetsSpec
+    run_launch_export_artifacts_task([
+        ExportArtifactToDatasetsSpec(
+            artifact=DataArtifact,
+            dataset_id="DATASET_ID_TEMPLATE",
+        ),
+    ])
+
+    return 
+
