@@ -72,12 +72,15 @@ def generate_artifacts_with_dataset_exports():
     sce_types(sdtm_data_path="/mnt/code/artifacts")
 
     from flytekitplugins.domino.artifact import run_launch_export_artifacts_task, ExportArtifactToDatasetsSpec
-    run_launch_export_artifacts_task([
-        ExportArtifactToDatasetsSpec(
-            artifact=DataArtifact,
-            dataset_id="DATASET_ID_TEMPLATE",
-        ),
-    ])
+    run_launch_export_artifacts_task(
+        [
+            ExportArtifactToDatasetsSpec(
+                artifact=DataArtifact,
+                dataset_id="DATASET_ID_TEMPLATE",
+            ),
+        ],
+        use_project_defaults_for_omitted=True,
+    )
 
     return 
 
