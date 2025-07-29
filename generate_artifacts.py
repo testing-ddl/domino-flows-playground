@@ -8,6 +8,7 @@ import pandas as pd
 
 ReportArtifact = Artifact(name="My Report", type=REPORT)
 DataArtifact = Artifact(name="My Data", type=DATA)
+ModelArtifact = Artifact(name="My Model", type=MODEL)
 
 # pyflyte run --remote generate_artifacts.py generate_artifacts 
 @workflow
@@ -41,6 +42,7 @@ def generate_artifacts():
             'png': ReportArtifact.File(name="report.png"),
             'jpeg': ReportArtifact.File(name="report.jpeg"),
             'notebook': DataArtifact.File(name="notebook.ipynb"),
+            'pkl': ModelArtifact.File(name="intro.pkl"),
             'mlflow_model': FlyteDirectory
         },
         use_latest=True

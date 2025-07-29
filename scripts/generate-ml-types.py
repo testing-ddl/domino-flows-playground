@@ -35,10 +35,16 @@ dest = f"/workflow/outputs/{named_output}"
 shutil.copy(source, dest)
 print("Created Notebook output")
 
-# MLFlow Mode
+# Pkl File
+named_output = "pkl"
+source = "/mnt/code/artifacts/intro.pkl"
+dest = f"/workflow/outputs/{named_output}"
+shutil.copytree(source, dest)
+print("Created Pkl output")
+
+# MLFlow Model
 named_output = "mlflow_model"
 source = "/mnt/code/artifacts/model"
 dest = f"/workflow/outputs/{named_output}"
 shutil.copytree(source, dest)
 print("Created MLflow model output")
-
