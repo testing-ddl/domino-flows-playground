@@ -42,7 +42,7 @@ def generate_artifacts():
             'png': ReportArtifact.File(name="report.png"),
             'jpeg': ReportArtifact.File(name="report.jpeg"),
             'notebook': DataArtifact.File(name="notebook.ipynb"),
-            'pkl': ModelArtifact.File(name="intro.pkl"),
+            'pkl': DataArtifact.File(name="intro.pkl"),
             'mlflow_model': FlyteDirectory
         },
         use_latest=True
