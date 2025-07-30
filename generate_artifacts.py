@@ -10,7 +10,7 @@ ReportArtifact = Artifact(name="My Report", type=REPORT)
 DataArtifact = Artifact(name="My Data", type=DATA)
 ModelArtifact = Artifact(name="My Model", type=MODEL)
 
-# pyflyte run --remote generate_artifacts.py generate_artifacts 
+# pyflyte run --remote generate_artifacts.py generate_artifacts
 @workflow
 def generate_artifacts(): 
 
