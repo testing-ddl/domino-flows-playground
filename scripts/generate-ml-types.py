@@ -39,7 +39,7 @@ print("Created Notebook output")
 named_output = "pkl"
 source = "/mnt/code/artifacts/intro.pkl"
 dest = f"/workflow/outputs/{named_output}"
-shutil.copytree(source, dest)
+shutil.copy(source, dest)
 print("Created Pkl output")
 
 # MLFlow Model
