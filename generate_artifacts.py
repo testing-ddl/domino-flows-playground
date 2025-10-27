@@ -75,7 +75,7 @@ def generate_artifacts_with_dataset_exports():
 
     from flytekitplugins.domino.artifact import run_launch_export_artifacts_task, ExportArtifactToDatasetsSpec
     run_launch_export_artifacts_task(
-        [
+        spec_list=[
             ExportArtifactToDatasetsSpec(
                 artifact=DataArtifact,
                 dataset_id="DATASET_ID_TEMPLATE",
