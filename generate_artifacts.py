@@ -101,10 +101,10 @@ def generate_artifacts_with_netapp_volume_exports():
 
     sce_types(sdtm_data_path="/mnt/code/artifacts")
 
-    from flytekitplugins.domino.artifact import run_launch_export_artifacts_task, ExportArtifactToNetappVolumesSpec
+    from flytekitplugins.domino.artifact import run_launch_export_artifacts_task, ExportArtifactToNetAppVolumesSpec
     run_launch_export_artifacts_task(
         spec_list=[
-            ExportArtifactToNetappVolumesSpec(
+            ExportArtifactToNetAppVolumesSpec(
                 artifact=DataArtifact,
                 netapp_volume_id="NETAPP_VOLUME_ID_TEMPLATE",
             ),
