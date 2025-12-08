@@ -5,10 +5,10 @@ from utils.flyte import DominoTask, Input, Output
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 from flytekitplugins.domino.helpers import Input, Output, run_domino_job_task
 
-# pyflyte run --remote simple_sum_workflow.py simple_sum_workflow --a 10 --b 6
+# pyflyte run --remote math_sum_workflow.py math_sum_workflow --a 10 --b 6
 
 @workflow
-def simple_sum_workflow(a: int, b: int) -> float:
+def math_sum_workflow(a: int, b: int) -> int:
     # Create first task 
     add_job = DominoJobTask(
         name='Add numbers',
