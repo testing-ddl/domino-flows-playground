@@ -16,7 +16,7 @@ def dataset_workflow_parameter():
      domino_job_config=DominoJobConfig(
          Command="ls -lR /mnt/data/domino-flows-playground",
          DatasetSnapshots=[
-             DatasetSnapshot(Id="694ad96631428063c406a0a9", Name="domino-flows-playground", Version=1),
+             DatasetSnapshot(Id="6930e2ca5bb39a1e85b91c27", Name="domino-flows-playground", Version=1),
          ],
      ),
      use_latest=True,
