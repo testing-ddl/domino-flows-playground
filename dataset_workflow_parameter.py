@@ -10,7 +10,7 @@ from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef, 
 pyflyte run --remote dataset_workflow_parameter.py dataset_workflow_parameter --name domino-flows-playground --id  --version 1
 
 @workflow
-def dataset_workflow_parameter(name: str, id: str, version: int):
+def dataset_workflow_parameter():
  DominoJobTask(
      name="My dataset workflow12",
      domino_job_config=DominoJobConfig(
