@@ -9,14 +9,14 @@ from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef, 
 
 @workflow
 def dataset_workflow_parameter(name: str, id: str, version: int):
-  cmd = f"ls -lR /mnt/data/{name}"
-  DominoJobTask(
-      name="My dataset workflow",
-      domino_job_config=DominoJobConfig(
-          Command=cmd,
-          DatasetSnapshots=[
-              DatasetSnapshot(Id=id, Name=name, Version=version),
-          ],
-      ),
-      use_latest=True,
-  )()
+ cmd = f"ls -lR /mnt/data/{name}"
+ DominoJobTask(
+     name="My dataset workflow",
+     domino_job_config=DominoJobConfig(
+         Command=cmd,
+         DatasetSnapshots=[
+             DatasetSnapshot(Id=id, Name=name, Version=version),
+         ],
+     ),
+     use_latest=True,
+ )()
