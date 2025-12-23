@@ -12,7 +12,7 @@ pyflyte run --remote dataset_workflow_parameter.py dataset_workflow_parameter --
 @workflow
 def dataset_workflow_parameter(name: str, id: str, version: int):
  DominoJobTask(
-     name="My dataset workflow1",
+     name="My dataset workflow12",
      domino_job_config=DominoJobConfig(
          Command="ls -lR /mnt/data/domino-flows-playground",
          DatasetSnapshots=[
