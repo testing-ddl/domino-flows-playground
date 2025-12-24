@@ -46,9 +46,8 @@ for i in range(60):
     if status in ["Succeeded", "Failed", "Error"]:
         break
 
-print("\\nJob output:")
-log_resp = requests.get(f"{api_host}/v4/jobs/{job_id}/stdout", headers=headers)
-print(log_resp.text)
+print(f"\\nJob completed. View output at:")
+print(f"{api_host}/jobs/{job_id}")
 '
 """
         ),
