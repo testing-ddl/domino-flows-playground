@@ -32,7 +32,7 @@ headers = {"X-Domino-Api-Key": api_key, "Content-Type": "application/json"}
 
 payload = {
     "projectId": project_id,
-    "commandToRun": f"ls -lR /mnt/data/{name}",
+    "commandToRun": f"echo Checking /mnt/data/{name}: && ls -lR /mnt/data/{name} && echo && echo Checking /mnt/data/snapshots/{name}/{ver}: && ls -lR /mnt/data/snapshots/{name}/{ver}",
     "isDirect": True,
     "datasetSnapshotReferences": [
         {"datasetId": did, "version": ver}
