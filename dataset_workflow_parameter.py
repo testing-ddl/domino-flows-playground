@@ -1,50 +1,38 @@
 from flytekit import workflow
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 
-# Dynamic Dataset Workflow - All in one file, no external scripts needed
-# Usage: pyflyte run --remote dataset_workflow_parameter.py wf --dataset_workflow_parameter <name> --dataset_id <id> --dataset_version <ver>
-
 
 @workflow
 def dataset_workflow_parameter(dataset_name: str, dataset_id: str, dataset_version: int):
-    """Dynamic dataset workflow - accepts any dataset at runtime"""
-
     DominoJobTask(
         name='Process Dataset',
         domino_job_config=DominoJobConfig(
-            Command=f"""python -c "
+            Command="""python -c '
 from pathlib import Path
 import os
+import json
 from domino import Domino
 
-# Read inputs from Flyte
-name = Path('/workflow/inputs/dataset_name').read_text().strip()
-dataset_id = Path('/workflow/inputs/dataset_id').read_text().strip()
-ver = int(Path('/workflow/inputs/dataset_version').read_text().strip())
+name = Path("/workflow/inputs/dataset_name").read_text().strip()
+did = Path("/workflow/inputs/dataset_id").read_text().strip()
+ver = int(Path("/workflow/inputs/dataset_version").read_text().strip())
 
-print('=' * 80)
-print(f'Dataset: {{name}} (ID: {{dataset_id}}, Version: {{ver}})')
-print('=' * 80)
+owner = os.environ["DOMINO_PROJECT_OWNER"]
+project = os.environ["DOMINO_PROJECT_NAME"]
+domino = Domino(f"{owner}/{project}")
 
-# Initialize Domino client
-owner = os.environ['DOMINO_PROJECT_OWNER']
-project = os.environ['DOMINO_PROJECT_NAME']
-domino = Domino(f'{{owner}}/{{project}}')
-
-# Start nested job with dataset via API
-cmd = f'echo Processing {{name}} v{{ver}} && ls -lR /mnt/data/{{name}}'
-
-print(f'Starting nested job...')
-print(f'Command: {{cmd}}')
+cmd = f"ls -lR /mnt/data/{name}"
 
 try:
+    job = domino.job_start(
+        command=cmd,
+        datasetIds=[did]
+    )
+    print(f"Job started with dataset: {json.dumps(job, indent=2)}")
+except TypeError:
     job = domino.runs_start(command=[cmd], isDirect=True)
-    job_id = job.get(\\'runId\\') or job.get(\\'id\\')
-    print(f'✓ Job started: {{job_id}}')
-except Exception as e:
-    print(f'Error: {{e}}')
-    raise
-"
+    print(f"Job started (no dataset API support): {json.dumps(job, indent=2)}")
+'
 """
         ),
         inputs={'dataset_name': str, 'dataset_id': str, 'dataset_version': int},
