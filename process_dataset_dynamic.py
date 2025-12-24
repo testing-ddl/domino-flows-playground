@@ -51,8 +51,20 @@ print(f"\nProject: {project_owner}/{project_name}")
 # Import Domino API
 try:
     from domino import Domino
+    import inspect
+
     domino = Domino(f"{project_owner}/{project_name}", api_key=api_key)
     print("✓ Domino API client initialized")
+
+    # Debug: Print available parameters for runs_start
+    print("\nDomino API runs_start signature:")
+    try:
+        sig = inspect.signature(domino.runs_start)
+        print(f"  {sig}")
+        print(f"  Parameters: {list(sig.parameters.keys())}")
+    except:
+        print("  (Could not inspect signature)")
+
 except ImportError:
     print("ERROR: domino-python package not installed")
     print("Install with: pip install dominodatalab")
@@ -68,18 +80,24 @@ try:
     # Command to run in the nested job
     command = f"echo 'Dataset: {dataset_name} v{dataset_version}' && ls -lR /mnt/data/{dataset_name}"
 
-    # Start the job with runs_start (non-blocking)
+    print(f"Command: {command}")
+    print(f"Dataset info: {dataset_id} / {dataset_name} v{dataset_version}")
+
+    # Based on Domino API, try the correct parameter format
+    # Reference: The python-domino library documentation
     job_response = domino.runs_start(
         command=[command],
-        isDirect=True,
-        datasetSnapshotIds=[{
-            "datasetId": dataset_id,
-            "version": dataset_version
-        }]
+        isDirect=True
+        # NOTE: Dataset mounting via API may not be supported or may use different method
+        # The domino-python library's runs_start may not support datasets directly
     )
 
     print(f"✓ Job started successfully")
     print(f"Response: {json.dumps(job_response, indent=2)}")
+    print()
+    print("NOTE: Job started but dataset may NOT be mounted.")
+    print("The Domino python-domino library may not support dataset mounting via runs_start()")
+    print(f"Requested dataset: {dataset_name} (ID: {dataset_id}, Version: {dataset_version})")
 
     # Get the run ID
     run_id = job_response.get('runId') or job_response.get('id')
