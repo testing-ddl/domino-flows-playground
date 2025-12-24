@@ -2,11 +2,11 @@ from flytekit import workflow
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 
 # Dynamic Dataset Workflow - All in one file, no external scripts needed
-# Usage: pyflyte run --remote dataset_dynamic.py wf --dataset_name <name> --dataset_id <id> --dataset_version <ver>
+# Usage: pyflyte run --remote dataset_workflow_parameter.py wf --dataset_workflow_parameter <name> --dataset_id <id> --dataset_version <ver>
 
 
 @workflow
-def wf(dataset_name: str, dataset_id: str, dataset_version: int):
+def dataset_workflow_parameter(dataset_name: str, dataset_id: str, dataset_version: int):
     """Dynamic dataset workflow - accepts any dataset at runtime"""
 
     DominoJobTask(
