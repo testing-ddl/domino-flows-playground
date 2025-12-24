@@ -46,8 +46,26 @@ for i in range(60):
     if status in ["Succeeded", "Failed", "Error"]:
         break
 
-print(f"\\nJob completed. View output at:")
-print(f"{api_host}/jobs/{job_id}")
+print(f"\\nTrying to fetch logs from multiple endpoints...")
+endpoints = [
+    f"/api/jobs/run/{job_id}/log/stdout",
+    f"/api/jobs/{job_id}/log",
+    f"/api/jobs/{job_id}/stdout",
+    f"/v1/jobs/{job_id}/log",
+]
+
+for endpoint in endpoints:
+    url = f"{api_host}{endpoint}"
+    print(f"Trying: {endpoint}")
+    log_resp = requests.get(url, headers=headers)
+    if log_resp.status_code == 200 and len(log_resp.text) > 100:
+        print(f"\\n=== Dataset Contents (from {endpoint}) ===")
+        print(log_resp.text)
+        break
+    else:
+        print(f"  Status {log_resp.status_code}, length {len(log_resp.text)}")
+else:
+    print(f"\\nView output at: {api_host}/jobs/{job_id}")
 '
 """
         ),
