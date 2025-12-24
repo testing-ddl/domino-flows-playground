@@ -1,5 +1,5 @@
 from flytekit import workflow
-from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, DatasetSnapshot
+from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 
 
 @workflow
@@ -11,40 +11,29 @@ def dataset_workflow_parameter(dataset_name: str, dataset_id: str, dataset_versi
 from pathlib import Path
 import os
 import requests
-import json
 
 name = Path("/workflow/inputs/dataset_name").read_text().strip()
 did = Path("/workflow/inputs/dataset_id").read_text().strip()
 ver = int(Path("/workflow/inputs/dataset_version").read_text().strip())
 
-owner = os.environ["DOMINO_PROJECT_OWNER"]
-project = os.environ["DOMINO_PROJECT_NAME"]
-project_id = os.environ.get("DOMINO_PROJECT_ID")
-
-print(f"Dataset: {name}, ID: {did}, Version: {ver}")
-print(f"Project: {owner}/{project} (ID: {project_id})")
-
-api_key = os.environ.get("DOMINO_USER_API_KEY")
+project_id = os.environ["DOMINO_PROJECT_ID"]
+api_key = os.environ["DOMINO_USER_API_KEY"]
 api_host = os.environ.get("DOMINO_API_HOST", "https://sushant100409.engineering-sandbox.domino.tech")
 
-url = f"{api_host}/v4/jobs/start"
-headers = {"X-Domino-Api-Key": api_key, "Content-Type": "application/json"}
+response = requests.post(
+    f"{api_host}/v4/jobs/start",
+    headers={"X-Domino-Api-Key": api_key, "Content-Type": "application/json"},
+    json={
+        "projectId": project_id,
+        "commandToRun": f"ls -lR /mnt/data/{name}",
+        "isDirect": True,
+        "datasetSnapshotReferences": [{"datasetId": did, "version": ver}]
+    }
+)
 
-payload = {
-    "projectId": project_id,
-    "commandToRun": f"echo Checking /mnt/data/{name}: && ls -lR /mnt/data/{name} && echo && echo Checking /mnt/data/snapshots/{name}/{ver}: && ls -lR /mnt/data/snapshots/{name}/{ver}",
-    "isDirect": True,
-    "datasetSnapshotReferences": [
-        {"datasetId": did, "version": ver}
-    ]
-}
-
-print(f"Payload: {json.dumps(payload, indent=2)}")
-
-response = requests.post(url, headers=headers, json=payload)
-print(f"Status: {response.status_code}")
 result = response.json()
-print(f"Result: {json.dumps(result, indent=2)}")
+job_id = result.get("id")
+print(f"Dataset {name} v{ver} - Job started: {job_id}")
 '
 """
         ),
