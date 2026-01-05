@@ -19,7 +19,9 @@ ver = int(Path("/workflow/inputs/dataset_version").read_text().strip())
 
 project_id = os.environ["DOMINO_PROJECT_ID"]
 api_key = os.environ["DOMINO_USER_API_KEY"]
-api_host = os.environ.get("DOMINO_API_HOST", "https://sushant100409.engineering-sandbox.domino.tech")
+api_host = os.environ["DOMINO_API_HOST"]
+owner = os.environ["DOMINO_PROJECT_OWNER"]
+project = os.environ["DOMINO_PROJECT_NAME"]
 headers = {"X-Domino-Api-Key": api_key, "Content-Type": "application/json"}
 
 response = requests.post(
@@ -27,45 +29,30 @@ response = requests.post(
     headers=headers,
     json={
         "projectId": project_id,
-        "commandToRun": f"ls -lR /mnt/data/{name}",
+        "commandToRun": f"ls -lR /mnt/data/snapshots/{name}/{ver}",
         "isDirect": True,
         "datasetSnapshotReferences": [{"datasetId": did, "version": ver}]
     }
 )
 
-result = response.json()
-job_id = result.get("id")
-print(f"Dataset {name} v{ver} - Job started: {job_id}")
+job_id = response.json().get("id")
 
-print("Waiting for job to complete...")
 for i in range(60):
     time.sleep(2)
     status_resp = requests.get(f"{api_host}/v4/jobs/{job_id}", headers=headers)
-    status = status_resp.json().get("statuses", {}).get("executionStatus")
-    print(f"  Status: {status}")
+    job_data = status_resp.json()
+    status = job_data.get("statuses", {}).get("executionStatus")
     if status in ["Succeeded", "Failed", "Error"]:
+        output_commit_id = job_data.get("commitDetails", {}).get("outputCommitId")
+        if output_commit_id:
+            stdout_url = f"{api_host}/u/{owner}/{project}/render/results/stdout.txt?commitId={output_commit_id}"
+            stdout_resp = requests.get(stdout_url, headers=headers)
+            if stdout_resp.status_code == 200:
+                print(f"\\n=== Dataset {name} Version {ver} ===")
+                print(stdout_resp.text)
+            else:
+                print(f"Could not fetch output (status {stdout_resp.status_code})")
         break
-
-print(f"\\nTrying to fetch logs from multiple endpoints...")
-endpoints = [
-    f"/api/jobs/run/{job_id}/log/stdout",
-    f"/api/jobs/{job_id}/log",
-    f"/api/jobs/{job_id}/stdout",
-    f"/v1/jobs/{job_id}/log",
-]
-
-for endpoint in endpoints:
-    url = f"{api_host}{endpoint}"
-    print(f"Trying: {endpoint}")
-    log_resp = requests.get(url, headers=headers)
-    if log_resp.status_code == 200 and len(log_resp.text) > 100:
-        print(f"\\n=== Dataset Contents (from {endpoint}) ===")
-        print(log_resp.text)
-        break
-    else:
-        print(f"  Status {log_resp.status_code}, length {len(log_resp.text)}")
-else:
-    print(f"\\nView output at: {api_host}/jobs/{job_id}")
 '
 """
         ),
