@@ -5,7 +5,7 @@ from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 @workflow
 def read_netapp_volume():
     """
-    pyflyte run --remote read_netapp_volume.py read_netapp_volume
+    pyflyte run --remote neatapp_workflow_parameter.py read_netapp_volume
     
     Test workflow to verify NetApp volume mounting functionality in Flows.
     """
