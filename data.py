@@ -7,7 +7,7 @@ rows = int(Path("/workflow/inputs/rows").read_text())
 cols = int(Path("/workflow/inputs/cols").read_text())
 
 # Write random output
-with open('/workflow/outputs/data', 'w', newline='') as csvfile:
+with open('/workflow/outputs/data.csv', 'w', newline='') as csvfile:
     random_writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
 
     # produce a header with the right number of columns

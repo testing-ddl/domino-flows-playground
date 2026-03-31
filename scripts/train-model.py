@@ -6,7 +6,7 @@ from time import sleep
 # For file inputs, the blob is the file input itself. 
 # For primitive type inputs like strings, integer, booleans, etc, they are stored inside the blob and must be read in by opening the file.
 named_input = "processed_data"
-data_path = "/workflow/inputs/{}".format(named_input)
+data_path = "/workflow/inputs/{}.csv".format(named_input)
 df = pd.read_csv(data_path)
 
 # Pretend like something is happening here to train the model

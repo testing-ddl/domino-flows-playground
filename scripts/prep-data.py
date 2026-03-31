@@ -22,5 +22,5 @@ print(df)
 
 # Write output. Outputs must be written to /workflow/outputs/<NAME OF OUTPUT> for it to be tracked.
 named_output = "processed_data"
-df.to_csv("/workflow/outputs/{}".format(named_output))
+df.to_csv("/workflow/outputs/{}.csv".format(named_output))
 
