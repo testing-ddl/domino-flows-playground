@@ -1,11 +1,11 @@
 from flytekitplugins.domino.helpers import Input, Output, run_domino_job_task
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef, EnvironmentRevisionSpecification, EnvironmentRevisionType, DatasetSnapshot
 from flytekit import workflow
-from flytekit.types.file import FlyteFile
+from flytekitplugins.domino.file import DominoFile
 from flytekit.types.directory import FlyteDirectory
 from typing import TypeVar, NamedTuple
 
-final_outputs = NamedTuple("final_outputs", model=FlyteFile)
+final_outputs = NamedTuple("final_outputs", model=DominoFile)
 
 @workflow
 def training_workflow(data_path: str) -> final_outputs: 
@@ -29,7 +29,7 @@ def training_workflow(data_path: str) -> final_outputs:
             Input(name="data_path", type=str, value=data_path)
         ],
         output_specs=[
-            Output(name="processed_data", type=FlyteFile[TypeVar("csv")])
+            Output(name="processed_data", type=DominoFile[TypeVar("csv")])
         ],
         use_project_defaults_for_omitted=True,
         cache=True,
@@ -43,12 +43,12 @@ def training_workflow(data_path: str) -> final_outputs:
         # environment_name="Domino Standard Environment Py3.10 R4.4",
         hardware_tier_name="Small",
         inputs=[
-            Input(name="processed_data", type=FlyteFile[TypeVar("csv")], value=data_prep_results['processed_data']),
+            Input(name="processed_data", type=DominoFile[TypeVar("csv")], value=data_prep_results['processed_data']),
             Input(name="epochs", type=int, value=10),
             Input(name="batch_size", type=int, value=32)
         ],
         output_specs=[
-            Output(name="model", type=FlyteFile)
+            Output(name="model", type=DominoFile)
         ],
         use_project_defaults_for_omitted=True,
         cache=True,
@@ -79,7 +79,7 @@ def training_workflow_cache(data_path: str) -> final_outputs:
             Input(name="data_path", type=str, value=data_path)
         ],
         output_specs=[
-            Output(name="processed_data", type=FlyteFile[TypeVar("csv")])
+            Output(name="processed_data", type=DominoFile[TypeVar("csv")])
         ],
         use_project_defaults_for_omitted=True,
         cache=True,
@@ -93,12 +93,12 @@ def training_workflow_cache(data_path: str) -> final_outputs:
         main_git_repo_ref=GitRef(Type="commitId", Value="9fc19c5d95e4a21a5b677ce4ac7896d301d831b9"),
         hardware_tier_name="Small",
         inputs=[
-            Input(name="processed_data", type=FlyteFile[TypeVar("csv")], value=data_prep_results['processed_data']),
+            Input(name="processed_data", type=DominoFile[TypeVar("csv")], value=data_prep_results['processed_data']),
             Input(name="epochs", type=int, value=10),
             Input(name="batch_size", type=int, value=32)
         ],
         output_specs=[
-            Output(name="model", type=FlyteFile)
+            Output(name="model", type=DominoFile)
         ],
         use_project_defaults_for_omitted=True,
         cache=True,

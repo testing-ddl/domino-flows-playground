@@ -1,13 +1,13 @@
 # from utils.flyte import DominoTask, Input, Output
 from flytekit import workflow
-from flytekit.types.file import FlyteFile
+from flytekitplugins.domino.file import DominoFile
 from flytekit.types.directory import FlyteDirectory
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 from typing import TypeVar, Optional, List, Dict
 import pandas as pd
 
 @workflow
-def training_workflow(data_path: str) -> FlyteFile: 
+def training_workflow(data_path: str) -> DominoFile: 
     """
     Sample data preparation and training workflow
 
@@ -29,7 +29,7 @@ def training_workflow(data_path: str) -> FlyteFile:
         # environment="Data Prep Environment",
         # hardware_tier="Small",
         inputs={'data_path': str},
-        outputs={'processed_data': FlyteFile},
+        outputs={'processed_data': DominoFile},
         use_latest=True
     )
 
@@ -41,15 +41,15 @@ def training_workflow(data_path: str) -> FlyteFile:
                                           Command="python /mnt/code/scripts/train-model.py"),
         # environment="Training Environment",
         # hardware_tier="Medium",
-        inputs={'processed_data': FlyteFile, 'epochs': int, 'batch_size': int},
-        outputs={'model': FlyteFile},
+        inputs={'processed_data': DominoFile, 'epochs': int, 'batch_size': int},
+        outputs={'model': DominoFile},
         use_latest=True
     )
 
     return training_results(processed_data=processed_data, epochs = 10, batch_size = 32)
 
 @workflow
-def training_subworkflow(data_path: str) -> FlyteFile: 
+def training_subworkflow(data_path: str) -> DominoFile: 
 
     data_prep_results = DominoJobTask(
         name="Prepare data",
@@ -58,7 +58,7 @@ def training_subworkflow(data_path: str) -> FlyteFile:
         # environment="Data Prep Environment",
         # hardware_tier="Small",
         inputs={'data_path': str},
-        outputs={'processed_data': FlyteFile},
+        outputs={'processed_data': DominoFile},
         use_latest=True
     )
 
@@ -70,8 +70,8 @@ def training_subworkflow(data_path: str) -> FlyteFile:
                                           Command="python /mnt/code/scripts/train-model.py"),
         # environment="Training Environment",
         # hardware_tier="Medium",
-        inputs={'processed_data': FlyteFile, 'epochs': int, 'batch_size': int},
-        outputs={'model': FlyteFile},
+        inputs={'processed_data': DominoFile, 'epochs': int, 'batch_size': int},
+        outputs={'model': DominoFile},
         use_latest=True
     )
 
@@ -88,7 +88,7 @@ def generate_types():
         # environment="Domino Standard Environment Py3.9 R4.3",
         # hardware_tier="Small",
         inputs={'sdtm_data_path': str},
-        outputs={'pdf':FlyteFile[TypeVar("pdf")], 'sas7bdat': FlyteFile[TypeVar("sas7bdat")]},
+        outputs={'pdf':DominoFile[TypeVar("pdf")], 'sas7bdat': DominoFile[TypeVar("sas7bdat")]},
         use_latest=True
     )
 
@@ -106,11 +106,11 @@ def generate_types():
             'dict': Dict[str,int]
         },
         outputs={
-            'csv': FlyteFile[TypeVar("csv")],
-            'json': FlyteFile[TypeVar("json")],
-            'png': FlyteFile[TypeVar("csv")],
-            'jpeg': FlyteFile[TypeVar("jpeg")],
-            'notebook': FlyteFile[TypeVar("ipynb")],
+            'csv': DominoFile[TypeVar("csv")],
+            'json': DominoFile[TypeVar("json")],
+            'png': DominoFile[TypeVar("csv")],
+            'jpeg': DominoFile[TypeVar("jpeg")],
+            'notebook': DominoFile[TypeVar("ipynb")],
             'mlflow_model': FlyteDirectory
         },
         use_latest=True
@@ -128,7 +128,7 @@ def generate_types():
 
 # pyflyte run --remote workflow.py training_workflow --data_path /mnt/code/artifacts/data.csv
 @workflow
-def training_workflow_git(data_path: str) -> FlyteFile: 
+def training_workflow_git(data_path: str) -> DominoFile: 
     """
     Sample data preparation and training workflow
 
@@ -148,7 +148,7 @@ def training_workflow_git(data_path: str) -> FlyteFile:
         domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
                                           Command="python /mnt/code/scripts/prep-data.py"),
         inputs={'data_path': str},
-        outputs={'processed_data': FlyteFile},
+        outputs={'processed_data': DominoFile},
         use_latest=True
     )
 
@@ -160,8 +160,8 @@ def training_workflow_git(data_path: str) -> FlyteFile:
                                           Command="python /mnt/code/scripts/train-model.py"),
         # environment="Training Environment",
         # hardware_tier="Medium",
-        inputs={'processed_data': FlyteFile, 'epochs': int, 'batch_size': int},
-        outputs={'model': FlyteFile},
+        inputs={'processed_data': DominoFile, 'epochs': int, 'batch_size': int},
+        outputs={'model': DominoFile},
         use_latest=True
     )
 
@@ -179,9 +179,9 @@ def training_workflow_nested(data_path: str):
                                           Command="sleep 100"),
         # environment="Training Environment",
         # hardware_tier="Medium",
-        inputs={'model': FlyteFile},
+        inputs={'model': DominoFile},
         use_latest=True
-            # Input(name="model", type=FlyteFile, value=model)
+            # Input(name="model", type=DominoFile, value=model)
     )
 
     return 

@@ -1,6 +1,6 @@
 from flytekitplugins.domino.helpers import DominoJobTask, DominoJobConfig, Input, Output
 from flytekit import workflow, dynamic
-from flytekit.types.file import FlyteFile
+from flytekitplugins.domino.file import DominoFile
 from flytekit.types.directory import FlyteDirectory
 from typing import TypeVar, Optional, List, Dict, Annotated, Tuple, NamedTuple
 from flytekit import Artifact
@@ -43,17 +43,17 @@ ReportArtifact3 = Artifact(name="report3.pdf", partition_keys=["type", "group"])
 
 @workflow
 def artifact_meta(data_path: str) -> Tuple[
-    Annotated[FlyteFile, ReportArtifact(type="report", group="report_foo")], 
-    Annotated[FlyteFile, ReportArtifact2(type="report", group="report_foo")], 
-    Annotated[FlyteFile, ReportArtifact3(type="report", group="report_bar")], 
+    Annotated[DominoFile, ReportArtifact(type="report", group="report_foo")], 
+    Annotated[DominoFile, ReportArtifact2(type="report", group="report_foo")], 
+    Annotated[DominoFile, ReportArtifact3(type="report", group="report_bar")], 
 
     # ideally the definition looks more like this:
-    # Annotated[FlyteFile, Artifact(name="report.pdf", Group=ReportGroup)], 
+    # Annotated[DominoFile, Artifact(name="report.pdf", Group=ReportGroup)], 
     # this could be further simplified in the programming model if we know that these artifacts are only a single file like
     # ArtifactFile(name="report.pdf", Group=ReportGroup)
 
     # normal workflow output with no annotations
-    FlyteFile
+    DominoFile
     ]: 
     """py
     pyflyte run --remote artifacts-example.py artifact_meta --data_path /mnt/data.csv
@@ -70,9 +70,9 @@ def artifact_meta(data_path: str) -> Tuple[
         outputs={
             # NOTE: Flyte normally suppports this -- but notice there are no partitions, which make them useless to Domino
             # this output is consumed by a subsequent task but also marked as an artifact
-            "processed_data": Annotated[FlyteFile, Artifact(name="processed.sas7bdat")],
+            "processed_data": Annotated[DominoFile, Artifact(name="processed.sas7bdat")],
             # no downstream consumers -- simply an artifact output from an intermediate node in the graph
-            "processed_data2": Annotated[FlyteFile, Artifact(name="processed2.sas7bdat")],
+            "processed_data2": Annotated[DominoFile, Artifact(name="processed2.sas7bdat")],
         },
         use_latest=True,
     )(data_path=data_path)
@@ -83,12 +83,12 @@ def artifact_meta(data_path: str) -> Tuple[
             Command="python /mnt/scripts/train-model.py",
         ),
         inputs={
-            "processed_data_in": FlyteFile,
+            "processed_data_in": DominoFile,
             "epochs": int,
             "batch_size": int,
         },
         outputs={
-            "model": FlyteFile,
+            "model": DominoFile,
         },
         use_latest=True,
     )(processed_data_in=data_prep_results.processed_data,epochs=10,batch_size=32)

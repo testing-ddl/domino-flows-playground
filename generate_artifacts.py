@@ -1,5 +1,4 @@
 from flytekit import workflow
-from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 from flytekitplugins.domino.artifact import Artifact, DATA, MODEL, REPORT

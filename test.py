@@ -1,7 +1,6 @@
 from utils.flyte import DominoTask, Input, Output
 from flytekit import workflow, dynamic
 from flytekit.experimental import eager
-from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
 from typing import TypeVar, Optional
 import pandas as pd

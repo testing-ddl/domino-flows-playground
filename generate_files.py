@@ -1,5 +1,5 @@
 from flytekit import workflow
-from flytekit.types.file import FlyteFile
+from flytekitplugins.domino.file import DominoFile
 from flytekit.types.directory import FlyteDirectory
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 from typing import TypeVar, Optional, List, Dict
@@ -14,7 +14,7 @@ def generate_types():
         domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
                                           Command="python /mnt/code/scripts/generate-sce-types.py"),
         inputs={'sdtm_data_path': str},
-        outputs={'pdf':FlyteFile[TypeVar("pdf")], 'sas7bdat': FlyteFile[TypeVar("sas7bdat")]},
+        outputs={'pdf':DominoFile[TypeVar("pdf")], 'sas7bdat': DominoFile[TypeVar("sas7bdat")]},
         use_latest=True
     )
 
@@ -32,11 +32,11 @@ def generate_types():
             'dict': Dict[str,int]
         },
         outputs={
-            'csv': FlyteFile[TypeVar("csv")],
-            'json': FlyteFile[TypeVar("json")],
-            'png': FlyteFile[TypeVar("png")],
-            'jpeg': FlyteFile[TypeVar("jpeg")],
-            'notebook': FlyteFile[TypeVar("ipynb")],
+            'csv': DominoFile[TypeVar("csv")],
+            'json': DominoFile[TypeVar("json")],
+            'png': DominoFile[TypeVar("png")],
+            'jpeg': DominoFile[TypeVar("jpeg")],
+            'notebook': DominoFile[TypeVar("ipynb")],
             'mlflow_model': FlyteDirectory
         },
         use_latest=True
@@ -63,7 +63,7 @@ def generate_types_on_remote_hw_tier():
                                           HardwareTierId="small-k8s-remote"
                                           ),
         inputs={'sdtm_data_path': str},
-        outputs={'pdf':FlyteFile[TypeVar("pdf")], 'sas7bdat': FlyteFile[TypeVar("sas7bdat")]},
+        outputs={'pdf':DominoFile[TypeVar("pdf")], 'sas7bdat': DominoFile[TypeVar("sas7bdat")]},
         use_latest=True
     )
 
@@ -83,11 +83,11 @@ def generate_types_on_remote_hw_tier():
             'dict': Dict[str,int]
         },
         outputs={
-            'csv': FlyteFile[TypeVar("csv")],
-            'json': FlyteFile[TypeVar("json")],
-            'png': FlyteFile[TypeVar("png")],
-            'jpeg': FlyteFile[TypeVar("jpeg")],
-            'notebook': FlyteFile[TypeVar("ipynb")],
+            'csv': DominoFile[TypeVar("csv")],
+            'json': DominoFile[TypeVar("json")],
+            'png': DominoFile[TypeVar("png")],
+            'jpeg': DominoFile[TypeVar("jpeg")],
+            'notebook': DominoFile[TypeVar("ipynb")],
             'mlflow_model': FlyteDirectory
         },
         use_latest=True

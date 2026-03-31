@@ -1,5 +1,5 @@
 from flytekit import workflow
-from flytekit.types.file import FlyteFile
+from flytekitplugins.domino.file import DominoFile
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 from flytekitplugins.domino.artifact import Artifact, DATA, MODEL, REPORT
 from typing import TypeVar, NamedTuple
@@ -28,7 +28,7 @@ def training_workflow(data_path: str):
     training_job = DominoJobTask(
         name='Train model',
         domino_job_config=training_job_config,
-        inputs={'processed_data': FlyteFile[TypeVar("csv")]},
+        inputs={'processed_data': DominoFile[TypeVar("csv")]},
         outputs={'pt': ModelArtifact.File(name="model.pt")},
         use_latest=True
     )

@@ -1,6 +1,5 @@
 import os
 from typing import List
-from flytekit.types.file import FlyteFile
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef, EnvironmentRevisionSpecification, EnvironmentRevisionType, DatasetSnapshot
 from flytekit.loggers import logger
 from dataclasses import dataclass

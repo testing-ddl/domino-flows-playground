@@ -1,5 +1,5 @@
 from flytekit import workflow
-from flytekit.types.file import FlyteFile
+from flytekitplugins.domino.file import DominoFile
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 from flytekitplugins.domino.artifact import Artifact, DATA, MODEL, REPORT
 from typing import TypeVar, NamedTuple
@@ -30,7 +30,7 @@ def clean_and_prep_data() -> final_outputs:
     clean = DominoJobTask(
         name='Clean raw data',
         domino_job_config=DominoJobConfig(Command='python clean.py'),
-        inputs={'data': FlyteFile[TypeVar('csv')]},
+        inputs={'data': DominoFile[TypeVar('csv')]},
         outputs={'data': DataArtifact.File(name='clean.csv')},
         use_latest=True
     )(data=raw.data)
@@ -39,10 +39,10 @@ def clean_and_prep_data() -> final_outputs:
     generate_report = DominoJobTask(
         name='Render data as an official report',
         domino_job_config=DominoJobConfig(Command='python report.py'),
-        inputs={'data': FlyteFile[TypeVar('csv')]},
+        inputs={'data': DominoFile[TypeVar('csv')]},
         outputs={
-            'html': FlyteFile[TypeVar('html')],
-            'graph': FlyteFile[TypeVar('png')]
+            'html': DominoFile[TypeVar('html')],
+            'graph': DominoFile[TypeVar('png')]
         },
         use_latest=True
     )(data=clean.data)

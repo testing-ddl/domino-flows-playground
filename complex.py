@@ -11,7 +11,7 @@ from flytekitplugins.domino.artifact import (
     REPORT,
 )
 from flytekit import workflow
-from flytekit.types.file import FlyteFile
+from flytekitplugins.domino.file import DominoFile
 
 TrainingDataReportArtifact = Artifact("Prepped Training Data Report", REPORT)
 ModelAccuracyReportArtifact = Artifact("Model Accuracy Report", REPORT)
@@ -24,7 +24,7 @@ PredictionsArtifact = Artifact("Model Predictions", DATA)
 
 # pyflyte run --remote complex.py complex_artifact_flow --training_data=input_data.csv --test_data=test_data.csv
 @workflow
-def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: FlyteFile[TypeVar("csv")]) -> Tuple[
+def complex_artifact_flow(training_data: DominoFile[TypeVar("csv")], test_data: DominoFile[TypeVar("csv")]) -> Tuple[
     TrainingDataReportArtifact.File(name="Summary Stats", type="txt"),
     TrainingDataReportArtifact.File(name="Data Vizualization", type="jpg"),
     ModelArtifactOne.File(name="Model One", type="pkl"),
@@ -47,12 +47,12 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Prep data",
         command="prep_data.py",
         inputs=[
-            Input(name="input_data", type=FlyteFile[TypeVar("csv")], value=training_data)
+            Input(name="input_data", type=DominoFile[TypeVar("csv")], value=training_data)
         ],
         output_specs=[
-            Output(name="stats", type=FlyteFile[TypeVar("txt")]),
-            Output(name="viz", type=FlyteFile[TypeVar("jpg")]),
-            Output(name="prepped_data", type=FlyteFile[TypeVar("csv")]),
+            Output(name="stats", type=DominoFile[TypeVar("txt")]),
+            Output(name="viz", type=DominoFile[TypeVar("jpg")]),
+            Output(name="prepped_data", type=DominoFile[TypeVar("csv")]),
         ],
         use_project_defaults_for_omitted=True,
     )
@@ -61,11 +61,11 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Mask Data",
         command="mask_data.py",
         inputs=[
-            Input(name="input_data", type=FlyteFile[TypeVar("csv")], value=test_data),
+            Input(name="input_data", type=DominoFile[TypeVar("csv")], value=test_data),
         ],
         output_specs=[
-            Output(name="data", type=FlyteFile[TypeVar("csv")]),
-            Output(name="labels", type=FlyteFile[TypeVar("csv")]),
+            Output(name="data", type=DominoFile[TypeVar("csv")]),
+            Output(name="labels", type=DominoFile[TypeVar("csv")]),
         ],
         use_project_defaults_for_omitted=True,
     )
@@ -74,10 +74,10 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Make Model One",
         command="make_model_one.py",
         inputs=[
-            Input(name="training_data", type=FlyteFile[TypeVar("csv")], value=prepped_training_data)
+            Input(name="training_data", type=DominoFile[TypeVar("csv")], value=prepped_training_data)
         ],
         output_specs=[
-            Output(name="model", type=FlyteFile[TypeVar("pkl")]),
+            Output(name="model", type=DominoFile[TypeVar("pkl")]),
         ],
         use_project_defaults_for_omitted=True,
     )
@@ -85,11 +85,11 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Classify Model One",
         command="classify_model_one.py",
         inputs=[
-            Input(name="model", type=FlyteFile[TypeVar("pkl")], value=model_one),
-            Input(name="data_points", type=FlyteFile[TypeVar("csv")], value=test_data)
+            Input(name="model", type=DominoFile[TypeVar("pkl")], value=model_one),
+            Input(name="data_points", type=DominoFile[TypeVar("csv")], value=test_data)
         ],
         output_specs=[
-            Output(name="predictions", type=FlyteFile[TypeVar("csv")]),
+            Output(name="predictions", type=DominoFile[TypeVar("csv")]),
         ],
         use_project_defaults_for_omitted=True,
     )
@@ -97,11 +97,11 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Accuracy Report Model One",
         command="make_accuracy_report.py",
         inputs=[
-            Input(name="predictions", type=FlyteFile[TypeVar("csv")], value=model_one_predictions),
-            Input(name="labels", type=FlyteFile[TypeVar("csv")], value=test_labels),
+            Input(name="predictions", type=DominoFile[TypeVar("csv")], value=model_one_predictions),
+            Input(name="labels", type=DominoFile[TypeVar("csv")], value=test_labels),
         ],
         output_specs=[
-            Output(name="accuracy", type=FlyteFile[TypeVar("pdf")]),
+            Output(name="accuracy", type=DominoFile[TypeVar("pdf")]),
         ],
         use_project_defaults_for_omitted=True,
     )
@@ -110,10 +110,10 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Make Model Two",
         command="make_model_two.py",
         inputs=[
-            Input(name="training_data", type=FlyteFile[TypeVar("csv")], value=prepped_training_data)
+            Input(name="training_data", type=DominoFile[TypeVar("csv")], value=prepped_training_data)
         ],
         output_specs=[
-            Output(name="model", type=FlyteFile[TypeVar("pkl")]),
+            Output(name="model", type=DominoFile[TypeVar("pkl")]),
         ],
         use_project_defaults_for_omitted=True,
     )
@@ -121,11 +121,11 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Classify Model Two",
         command="classify_model_two.py",
         inputs=[
-            Input(name="model", type=FlyteFile[TypeVar("pkl")], value=model_two),
-            Input(name="data_points", type=FlyteFile[TypeVar("csv")], value=test_data)
+            Input(name="model", type=DominoFile[TypeVar("pkl")], value=model_two),
+            Input(name="data_points", type=DominoFile[TypeVar("csv")], value=test_data)
         ],
         output_specs=[
-            Output(name="predictions", type=FlyteFile[TypeVar("csv")]),
+            Output(name="predictions", type=DominoFile[TypeVar("csv")]),
         ],
         use_project_defaults_for_omitted=True,
     )
@@ -133,11 +133,11 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Accuracy Report Model Two",
         command="make_accuracy_report.py",
         inputs=[
-            Input(name="predictions", type=FlyteFile[TypeVar("csv")], value=model_two_predictions),
-            Input(name="labels", type=FlyteFile[TypeVar("csv")], value=test_labels),
+            Input(name="predictions", type=DominoFile[TypeVar("csv")], value=model_two_predictions),
+            Input(name="labels", type=DominoFile[TypeVar("csv")], value=test_labels),
         ],
         output_specs=[
-            Output(name="accuracy", type=FlyteFile[TypeVar("pdf")]),
+            Output(name="accuracy", type=DominoFile[TypeVar("pdf")]),
         ],
         use_project_defaults_for_omitted=True,
     )
@@ -146,13 +146,13 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Make Model Three",
         command="make_model_three.py",
         inputs=[
-            Input(name="training_data", type=FlyteFile[TypeVar("csv")], value=prepped_training_data)
+            Input(name="training_data", type=DominoFile[TypeVar("csv")], value=prepped_training_data)
         ],
         output_specs=[
-            Output(name="model", type=FlyteFile[TypeVar("extensionfoobarbaz")]),
-            Output(name="model_meta_one", type=FlyteFile[TypeVar("pkl")]),
-            Output(name="model_meta_two", type=FlyteFile[TypeVar("pkl")]),
-            Output(name="model_meta_three", type=FlyteFile[TypeVar("pkl")]),
+            Output(name="model", type=DominoFile[TypeVar("extensionfoobarbaz")]),
+            Output(name="model_meta_one", type=DominoFile[TypeVar("pkl")]),
+            Output(name="model_meta_two", type=DominoFile[TypeVar("pkl")]),
+            Output(name="model_meta_three", type=DominoFile[TypeVar("pkl")]),
         ],
         use_project_defaults_for_omitted=True,
     )
@@ -160,14 +160,14 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Classify Model Three",
         command="classify_model_three.py",
         inputs=[
-            Input(name="model", type=FlyteFile[TypeVar("extensionfoobarbaz")], value=model_three),
-            Input(name="model_meta_one", type=FlyteFile[TypeVar("pkl")], value=model_three_meta_one),
-            Input(name="model_meta_two", type=FlyteFile[TypeVar("pkl")], value=model_three_meta_two),
-            Input(name="model_meta_three", type=FlyteFile[TypeVar("pkl")], value=model_three_meta_three),
-            Input(name="data_points", type=FlyteFile[TypeVar("csv")], value=test_data)
+            Input(name="model", type=DominoFile[TypeVar("extensionfoobarbaz")], value=model_three),
+            Input(name="model_meta_one", type=DominoFile[TypeVar("pkl")], value=model_three_meta_one),
+            Input(name="model_meta_two", type=DominoFile[TypeVar("pkl")], value=model_three_meta_two),
+            Input(name="model_meta_three", type=DominoFile[TypeVar("pkl")], value=model_three_meta_three),
+            Input(name="data_points", type=DominoFile[TypeVar("csv")], value=test_data)
         ],
         output_specs=[
-            Output(name="predictions", type=FlyteFile[TypeVar("csv")]),
+            Output(name="predictions", type=DominoFile[TypeVar("csv")]),
         ],
         use_project_defaults_for_omitted=True,
     )
@@ -175,11 +175,11 @@ def complex_artifact_flow(training_data: FlyteFile[TypeVar("csv")], test_data: F
         flyte_task_name="Accuracy Report Model Three",
         command="make_accuracy_report.py",
         inputs=[
-            Input(name="predictions", type=FlyteFile[TypeVar("csv")], value=model_three_predictions),
-            Input(name="labels", type=FlyteFile[TypeVar("csv")], value=test_labels),
+            Input(name="predictions", type=DominoFile[TypeVar("csv")], value=model_three_predictions),
+            Input(name="labels", type=DominoFile[TypeVar("csv")], value=test_labels),
         ],
         output_specs=[
-            Output(name="accuracy", type=FlyteFile[TypeVar("pdf")]),
+            Output(name="accuracy", type=DominoFile[TypeVar("pdf")]),
         ],
         use_project_defaults_for_omitted=True,
     )

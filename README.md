@@ -38,7 +38,7 @@ data_prep_results = run_domino_job(
         Input(name="data_path", type=str, value=data_path)
     ],
     outputs=[
-        Output(name="processed_data", type=FlyteFile)
+        Output(name="processed_data", type=DominoFile)
     ]
 )
 ```
@@ -65,12 +65,12 @@ training_results = run_domino_job(
     environment="Training Environment",
     hardware_tier="Medium",
     inputs=[
-        Input(name="processed_data", type=FlyteFile, value=data_prep_results['processed_data']),
+        Input(name="processed_data", type=DominoFile, value=data_prep_results['processed_data']),
         Input(name="epochs", type=int, value=10),
         Input(name="batch_size", type=int, value=32)
     ],
     outputs=[
-        Output(name="model", type=FlyteFile)
+        Output(name="model", type=DominoFile)
     ]
 )
 ```

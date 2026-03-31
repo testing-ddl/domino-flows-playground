@@ -1,5 +1,5 @@
 from flytekit import workflow
-from flytekit.types.file import FlyteFile
+from flytekitplugins.domino.file import DominoFile
 from flytekit.types.directory import FlyteDirectory
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 from flytekitplugins.domino.artifact import Artifact, DATA, MODEL, REPORT
@@ -42,11 +42,11 @@ def generate_artifacts() -> final_outputs:
             'dict': Dict[str,int]
         },
         outputs={
-            'csv': FlyteFile[TypeVar("csv")],            
+            'csv': DominoFile[TypeVar("csv")],            
             'json': DataArtifact.File(name="data.json"),
             'png': ReportArtifact.File(name="report.png"),
             'jpeg': ReportArtifact.File(name="report.jpeg"),
-            'notebook': FlyteFile[TypeVar("ipynb")],
+            'notebook': DominoFile[TypeVar("ipynb")],
             'mlflow_model': FlyteDirectory
         },
         use_latest=True
