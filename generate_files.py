@@ -1,8 +1,9 @@
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
+from flytekitplugins.domino.file import PathConfig
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
-from typing import TypeVar, Optional, List, Dict
+from typing import Annotated, TypeVar, Optional, List, Dict
 import pandas as pd
 
 # pyflyte run --remote generate_files.py generate_types 
@@ -18,7 +19,7 @@ def generate_types():
         use_latest=True
     )
 
-    sce_types(sdtm_data_path="/mnt/code/artifacts")
+    sce_result = sce_types(sdtm_data_path="/mnt/code/artifacts")
 
     ml_types = DominoJobTask(
         name="Generate ML Types",
@@ -29,14 +30,15 @@ def generate_types():
             'learning_rate': float,
             'do_eval': bool,
             'list': List[int],
-            'dict': Dict[str,int]
+            'dict': Dict[str,int],
+            'sasdata': Annotated[FlyteFile[TypeVar("sas7bdat")], PathConfig(path="/mnt/data/flow-outputs/data.sas7bdat")]
         },
         outputs={
-            'csv': FlyteFile[TypeVar("csv")],
-            'json': FlyteFile[TypeVar("json")],
-            'png': FlyteFile[TypeVar("png")],
-            'jpeg': FlyteFile[TypeVar("jpeg")],
-            'notebook': FlyteFile[TypeVar("ipynb")],
+            'csv': Annotated[FlyteFile[TypeVar("csv")], PathConfig(path="/mnt/data/flow-outputs/data.csv")],
+            'json': Annotated[FlyteFile[TypeVar("json")], PathConfig(path="/mnt/data/flow-outputs/test.json")],
+            'png': Annotated[FlyteFile[TypeVar("png")], PathConfig(path="/mnt/data/flow-outputs/plot.png")],
+            'jpeg': Annotated[FlyteFile[TypeVar("jpeg")], PathConfig(path="/mnt/data/flow-outputs/plot.jpeg")],
+            'notebook': Annotated[FlyteFile[TypeVar("ipynb")], PathConfig(path="/mnt/data/flow-outputs/notebook.ipynb")],
             'mlflow_model': FlyteDirectory
         },
         use_latest=True
@@ -47,7 +49,8 @@ def generate_types():
             learning_rate=0.001,
             do_eval=True,
             list=[1,2,3,4,5],
-            dict={"param1": 1, "param2": 2,"param3": 3}
+            dict={"param1": 1, "param2": 2,"param3": 3},
+            sasdata=sce_result[1]
             )
 
     return 
@@ -83,11 +86,11 @@ def generate_types_on_remote_hw_tier():
             'dict': Dict[str,int]
         },
         outputs={
-            'csv': FlyteFile[TypeVar("csv")],
-            'json': FlyteFile[TypeVar("json")],
-            'png': FlyteFile[TypeVar("png")],
-            'jpeg': FlyteFile[TypeVar("jpeg")],
-            'notebook': FlyteFile[TypeVar("ipynb")],
+            'csv': Annotated[FlyteFile[TypeVar("csv")], PathConfig(path="/mnt/data/flow-outputs/data.csv")],
+            'json': Annotated[FlyteFile[TypeVar("json")], PathConfig(path="/mnt/data/flow-outputs/test.json")],
+            'png': Annotated[FlyteFile[TypeVar("png")], PathConfig(path="/mnt/data/flow-outputs/plot.png")],
+            'jpeg': Annotated[FlyteFile[TypeVar("jpeg")], PathConfig(path="/mnt/data/flow-outputs/plot.jpeg")],
+            'notebook': Annotated[FlyteFile[TypeVar("ipynb")], PathConfig(path="/mnt/data/flow-outputs/notebook.ipynb")],
             'mlflow_model': FlyteDirectory
         },
         use_latest=True
