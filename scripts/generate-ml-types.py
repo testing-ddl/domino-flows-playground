@@ -1,50 +1,68 @@
 import shutil
+import os
+
+os.makedirs("/mnt/data/flow-outputs", exist_ok=True)
 
 # CSV File
-named_output = "csv"
 source = "/mnt/code/artifacts/data.csv"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created CSV output")
+dest = f"/mnt/data/flow-outputs/data.csv"
+try:
+    shutil.copy(source, dest)
+    print("Created CSV output")
+except Exception as e:
+    print(f"Error: {e}")
 
 # CSV File
-named_output = "json"
 source = "/mnt/code/artifacts/test.json"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created JSON output")
+dest = f"/mnt/data/flow-outputs/test.json"
+try:
+    shutil.copy(source, dest)
+    print("Created JSON output")
+except Exception as e:
+    print(f"Error: {e}")
 
 # PNG File
-named_output = "png"
 source = "/mnt/code/artifacts/plot.png"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created PNG output")
+dest = f"/mnt/data/flow-outputs/plot.png"
+try:
+    shutil.copy(source, dest)
+    print("Created PNG output")
+except Exception as e:
+    print(f"Error: {e}")
 
 # JPEG File
-named_output = "jpeg"
 source = "/mnt/code/artifacts/plot.jpeg"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created JPEG output")
+dest = f"/mnt/data/flow-outputs/plot.jpeg"
+try:
+    shutil.copy(source, dest)
+    print("Created JPEG output")
+except Exception as e:
+    print(f"Error: {e}")
 
 # Notebook File
-named_output = "notebook"
 source = "/mnt/code/artifacts/notebook.ipynb"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created Notebook output")
+dest = f"/mnt/data/flow-outputs/notebook.ipynb"
+try:
+    shutil.copy(source, dest)
+    print("Created Notebook output")
+except Exception as e:
+    print(f"Error: {e}")
 
 # Pkl File
-named_output = "pkl"
 source = "/mnt/code/artifacts/intro.pkl"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created Pkl output")
+dest = f"/mnt/data/flow-outputs/intro.pkl"
+try:
+    shutil.copy(source, dest)
+    print("Created Pkl output")
+except Exception as e:
+    print(f"Error: {e}")
 
 # MLFlow Model
 named_output = "mlflow_model"
 source = "/mnt/code/artifacts/model"
 dest = f"/workflow/outputs/{named_output}"
-shutil.copytree(source, dest)
-print("Created MLflow model output")
+try:
+    shutil.copytree(source, dest)
+    print("Created MLflow model output")
+except Exception as e:
+    print(f"Error: {e}")
