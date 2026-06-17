@@ -2,8 +2,9 @@
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
+from flytekitplugins.domino.file import PathConfig
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
-from typing import TypeVar, Optional, List, Dict
+from typing import Annotated, TypeVar, Optional, List, Dict
 import pandas as pd
 
 @workflow
@@ -106,11 +107,11 @@ def generate_types():
             'dict': Dict[str,int]
         },
         outputs={
-            'csv': FlyteFile[TypeVar("csv")],
-            'json': FlyteFile[TypeVar("json")],
-            'png': FlyteFile[TypeVar("csv")],
-            'jpeg': FlyteFile[TypeVar("jpeg")],
-            'notebook': FlyteFile[TypeVar("ipynb")],
+            'csv': Annotated[FlyteFile[TypeVar("csv")], PathConfig(path="/mnt/data/flow-outputs/data.csv")],
+            'json': Annotated[FlyteFile[TypeVar("json")], PathConfig(path="/mnt/data/flow-outputs/test.json")],
+            'png': Annotated[FlyteFile[TypeVar("csv")], PathConfig(path="/mnt/data/flow-outputs/plot.png")],
+            'jpeg': Annotated[FlyteFile[TypeVar("jpeg")], PathConfig(path="/mnt/data/flow-outputs/plot.jpeg")],
+            'notebook': Annotated[FlyteFile[TypeVar("ipynb")], PathConfig(path="/mnt/data/flow-outputs/notebook.ipynb")],
             'mlflow_model': FlyteDirectory
         },
         use_latest=True

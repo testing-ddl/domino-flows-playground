@@ -1,9 +1,10 @@
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
+from flytekitplugins.domino.file import PathConfig
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 from flytekitplugins.domino.artifact import Artifact, DATA, MODEL, REPORT
-from typing import TypeVar, Optional, List, Dict, NamedTuple
+from typing import Annotated, TypeVar, Optional, List, Dict, NamedTuple
 import pandas as pd
 
 ReportArtifact = Artifact(name="My Report", type=REPORT)
@@ -42,11 +43,11 @@ def generate_artifacts() -> final_outputs:
             'dict': Dict[str,int]
         },
         outputs={
-            'csv': FlyteFile[TypeVar("csv")],            
-            'json': DataArtifact.File(name="data.json"),
-            'png': ReportArtifact.File(name="report.png"),
-            'jpeg': ReportArtifact.File(name="report.jpeg"),
-            'notebook': FlyteFile[TypeVar("ipynb")],
+            'csv': Annotated[FlyteFile[TypeVar("csv")], PathConfig(path="/mnt/data/flow-outputs/data.csv")],            
+            'json': Annotated[DataArtifact.File(name="data.json"), PathConfig(path="/mnt/data/flow-outputs/test.json")],
+            'png': Annotated[ReportArtifact.File(name="report.png"), PathConfig(path="/mnt/data/flow-outputs/plot.png")],
+            'jpeg': Annotated[ReportArtifact.File(name="report.jpeg"), PathConfig(path="/mnt/data/flow-outputs/plot.jpeg")],
+            'notebook': Annotated[FlyteFile[TypeVar("ipynb")], PathConfig(path="/mnt/data/flow-outputs/notebook.ipynb")],
             'mlflow_model': FlyteDirectory
         },
         use_latest=True
