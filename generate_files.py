@@ -71,7 +71,7 @@ def generate_types_and_use_path_config():
     ml_types = DominoJobTask(
         name="Generate ML Types",
         domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
-                                          Command="OUTPUT_DIR=/mnt/data/flow-outputs SHOULD_APPEND_FILE_EXT=true python /mnt/code/scripts/generate-ml-types.py"),
+                                          Command="env OUTPUT_DIR=/mnt/data/flow-outputs SHOULD_APPEND_FILE_EXT=true python /mnt/code/scripts/generate-ml-types.py"),
         inputs={
             'batch_size': int,
             'learning_rate': float,
