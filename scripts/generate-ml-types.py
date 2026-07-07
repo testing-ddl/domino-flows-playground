@@ -1,50 +1,34 @@
+import os
 import shutil
+from pathlib import Path
 
-# CSV File
-named_output = "csv"
-source = "/mnt/code/artifacts/data.csv"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created CSV output")
+OUTPUT_DIR = os.environ.get("OUTPUT_DIR", "/workflow/outputs")
+SHOULD_APPEND_FILE_EXT = os.environ.get("SHOULD_APPEND_FILE_EXT", "").lower() in ("1", "true", "yes")
+ARTIFACTS_DIR = "/mnt/code/artifacts"
 
-# CSV File
-named_output = "json"
-source = "/mnt/code/artifacts/test.json"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created JSON output")
+if not Path(OUTPUT_DIR).exists():
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# PNG File
-named_output = "png"
-source = "/mnt/code/artifacts/plot.png"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created PNG output")
+outputs = [
+    ("csv",          "data.csv"),
+    ("json",         "test.json"),
+    ("png",          "plot.png"),
+    ("jpeg",         "plot.jpeg"),
+    ("notebook",     "notebook.ipynb"),
+    ("pkl",          "intro.pkl"),
+    ("mlflow_model", "model"),
+]
 
-# JPEG File
-named_output = "jpeg"
-source = "/mnt/code/artifacts/plot.jpeg"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created JPEG output")
-
-# Notebook File
-named_output = "notebook"
-source = "/mnt/code/artifacts/notebook.ipynb"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created Notebook output")
-
-# Pkl File
-named_output = "pkl"
-source = "/mnt/code/artifacts/intro.pkl"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copy(source, dest)
-print("Created Pkl output")
-
-# MLFlow Model
-named_output = "mlflow_model"
-source = "/mnt/code/artifacts/model"
-dest = f"/workflow/outputs/{named_output}"
-shutil.copytree(source, dest)
-print("Created MLflow model output")
+for named_output, filename in outputs:
+    source = Path(ARTIFACTS_DIR) / filename
+    dest_name = filename if SHOULD_APPEND_FILE_EXT else named_output
+    dest = Path(OUTPUT_DIR) / dest_name
+    try:
+        if source.is_dir():
+            shutil.copytree(source, dest)
+        else:
+            shutil.copy(source, dest)
+        print(f"Created {named_output} output")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise SystemExit(1)

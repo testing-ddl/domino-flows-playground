@@ -1,8 +1,9 @@
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
+from flytekitplugins.domino.file import PathConfig
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
-from typing import TypeVar, Optional, List, Dict
+from typing import Annotated, TypeVar, Optional, List, Dict
 import pandas as pd
 
 # pyflyte run --remote generate_files.py generate_types 
@@ -48,6 +49,59 @@ def generate_types():
             do_eval=True,
             list=[1,2,3,4,5],
             dict={"param1": 1, "param2": 2,"param3": 3}
+            )
+
+    return 
+
+
+@workflow
+def generate_types_and_use_path_config(): 
+
+    sce_types = DominoJobTask(
+        name="Generate SCE Types",
+        domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
+                                          Command="python /mnt/code/scripts/generate-sce-types.py"),
+        inputs={'sdtm_data_path': str},
+        outputs={'pdf':FlyteFile[TypeVar("pdf")], 'sas7bdat': FlyteFile[TypeVar("sas7bdat")]},
+        use_latest=True
+    )
+
+    sce_result = sce_types(sdtm_data_path="/mnt/code/artifacts")
+
+    ml_types = DominoJobTask(
+        name="Generate ML Types",
+        domino_job_config=DominoJobConfig(MainRepoGitRef=GitRef(Type="head"),
+                                          Command="OUTPUT_DIR=/mnt/data/flow-outputs SHOULD_APPEND_FILE_EXT=true python /mnt/code/scripts/generate-ml-types.py"),
+        inputs={
+            'batch_size': int,
+            'learning_rate': float,
+            'do_eval': bool,
+            'list': List[int],
+            'dict': Dict[str,int],
+            'sasdata': Annotated[FlyteFile[TypeVar("sas7bdat")], PathConfig(path="/mnt/data/flow-outputs/data.sas7bdat")]
+        },
+        outputs={
+            'csv': FlyteFile[TypeVar("csv")],
+            'json': FlyteFile[TypeVar("json")],
+            'png': FlyteFile[TypeVar("png")],
+            'jpeg': FlyteFile[TypeVar("jpeg")],
+            'notebook': FlyteFile[TypeVar("ipynb")],
+            'csv': Annotated[FlyteFile[TypeVar("csv")], PathConfig(path="/mnt/data/flow-outputs/data.csv")],
+            'json': Annotated[FlyteFile[TypeVar("json")], PathConfig(path="/mnt/data/flow-outputs/test.json")],
+            'png': Annotated[FlyteFile[TypeVar("png")], PathConfig(path="/mnt/data/flow-outputs/plot.png")],
+            'jpeg': Annotated[FlyteFile[TypeVar("jpeg")], PathConfig(path="/mnt/data/flow-outputs/plot.jpeg")],
+            'notebook': Annotated[FlyteFile[TypeVar("ipynb")], PathConfig(path="/mnt/data/flow-outputs/notebook.ipynb")],
+        },
+        use_latest=True
+
+    )
+
+    ml_types(batch_size=32,
+            learning_rate=0.001,
+            do_eval=True,
+            list=[1,2,3,4,5],
+            dict={"param1": 1, "param2": 2,"param3": 3},
+            sasdata=sce_result[1]
             )
 
     return 
