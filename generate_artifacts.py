@@ -1,7 +1,6 @@
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
-from flytekitplugins.domino.file import PathConfig
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 from flytekitplugins.domino.artifact import Artifact, DATA, MODEL, REPORT
 from typing import Annotated, TypeVar, Optional, List, Dict
@@ -119,6 +118,8 @@ def generate_artifacts_with_netapp_volume_exports():
 # pyflyte run --remote generate_artifacts.py generate_artifacts_and_use_path_config
 @workflow
 def generate_artifacts_and_use_path_config(): 
+    # The import is placed inside the workflow function for backwards-compatibility with 6.2.3 e2e testing
+    from flytekitplugins.domino.file import PathConfig
 
     sce_types = DominoJobTask(
         name="Generate SCE Types",

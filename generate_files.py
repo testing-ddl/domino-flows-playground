@@ -1,7 +1,6 @@
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekit.types.directory import FlyteDirectory
-from flytekitplugins.domino.file import PathConfig
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 from typing import Annotated, TypeVar, Optional, List, Dict
 import pandas as pd
@@ -55,7 +54,9 @@ def generate_types():
 
 
 @workflow
-def generate_types_and_use_path_config(): 
+def generate_types_and_use_path_config():
+    # The import is placed inside the workflow function for backwards-compatibility with 6.2.3 e2e testing
+    from flytekitplugins.domino.file import PathConfig
 
     sce_types = DominoJobTask(
         name="Generate SCE Types",
