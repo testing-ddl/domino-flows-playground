@@ -14,7 +14,7 @@ def simple_math_workflow(a: int, b: int) -> float:
         flyte_task_name="Add numbers",
         command="python add.py",
         environment_name="Flows DSE",
-        hardware_tier_name="Small",
+        hardware_tier_name="Small k8s",
         inputs=[
             Input(name="first_value", type=int, value=a),
             Input(name="second_value", type=int, value=b)
