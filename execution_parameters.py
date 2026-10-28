@@ -42,3 +42,39 @@ def simple_math_workflow(a: int, b: int) -> float:
     sqrt = sqrt_task['sqrt']
 
     return sqrt
+
+@workflow
+def simple_math_workflow_hwt_update(a: int, b: int) -> float:
+
+    add_task = run_domino_job_task(
+        flyte_task_name="Add numbers",
+        command="python add.py",
+        environment_name="Flows DSE",
+        hardware_tier_name="Small k8s",
+        inputs=[
+            Input(name="first_value", type=int, value=a),
+            Input(name="second_value", type=int, value=b)
+        ],
+        output_specs=[
+            Output(name="sum", type=int)
+        ],
+        use_project_defaults_for_omitted=True,
+    )
+    sum = add_task['sum']
+
+    sqrt_task = run_domino_job_task(
+        flyte_task_name="Square root",
+        command="python sqrt.py",
+        environment_name="Domino Core Environment",
+        hardware_tier_name="Medium",
+        inputs=[
+            Input(name="value", type=int, value=sum)
+        ],
+        output_specs=[
+            Output(name="sqrt", type=float)
+        ],
+        use_project_defaults_for_omitted=True,
+    )
+    sqrt = sqrt_task['sqrt']
+
+    return sqrt
