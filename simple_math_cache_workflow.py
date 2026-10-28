@@ -97,7 +97,7 @@ def simple_math_workflow_hwt_update(a: int, b: int) -> float:
         command="python sqrt.py",
         main_git_repo_ref=GitRef(Type="commitId", Value="9fc19c5d95e4a21a5b677ce4ac7896d301d831b9"),
         environment_name="Domino Core Environment",
-        hardware_tier_name="Small",
+        hardware_tier_name="Small k8s",
         inputs=[
             Input(name="value", type=int, value=sum)
         ],
